@@ -30,7 +30,7 @@ exports.register = async (req, res) => {
     };
 
     try {
-        // บันทึกผู้ใช้ใหม่ลงฐานข้อมูล (ใช้ฟังก์ชัน User.create สมมติว่ามีการคืนค่าเป็นไปตามฐานข้อมูล)
+   
         await User.create(newUser);
 
         // ตอบกลับด้วยข้อความ "Register successfully"
