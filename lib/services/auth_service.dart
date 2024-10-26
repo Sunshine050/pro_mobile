@@ -1,12 +1,20 @@
-// lib/services/auth_service.dart
 import 'api_service.dart';
 
 class AuthService {
   final ApiService apiService = ApiService();
 
-  Future<dynamic> register(String username, String password) async {
+  String validateEmail(String email) {
+    if (!email.contains('@')) {
+      email += '@gmail.com';  
+    }
+    return email;
+  }
+
+  Future<dynamic> register(String username, String email, String password) async {
+    final validatedEmail = validateEmail(email);
     return await apiService.postRequest('/api/auth/register', {
       'username': username,
+      'email': validatedEmail,
       'password': password,
     });
   }

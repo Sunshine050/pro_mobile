@@ -1,4 +1,3 @@
-// lib/services/student_service.dart
 import 'api_service.dart';
 
 class StudentService {
