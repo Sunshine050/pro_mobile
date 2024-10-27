@@ -10,13 +10,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-  
-  # ใช้สำหรับการทำ HTTP request
-  http: ^1.2.2  # อัปเดตเป็นเวอร์ชันที่แนะนำ
-
-  # ใช้สำหรับการจัดการสถานะ (ถ้าจำเป็น)
+  flutter_switch: ^0.3.2
+  intl: ^0.17.0
+  image_picker: ^0.8.5+3
+  http: ^1.2.2
   provider: ^6.0.0
+  shared_preferences: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -25,15 +24,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-  # ถ้าคุณมี assets หรือ custom fonts สามารถเพิ่มได้ที่นี่
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
-  #
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic

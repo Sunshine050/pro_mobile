@@ -7,6 +7,9 @@ const authRoutes = require('./routes/auth.routes');
 
 app.use(express.json());
 
+// เส้นทางแสดงรูปภาพที่อัปโหลด
+app.use('/uploads', express.static('uploads'));
+
 // ตั้งค่า Routes
 app.use('/student', studentRoutes);
 app.use('/staff', staffRoutes);
