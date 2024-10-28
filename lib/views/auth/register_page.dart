@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pro_mobile/views/auth/register_page.dart';
-
-
+import 'package:pro_mobile/views/auth/login_page.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -14,7 +12,8 @@ class _RegisterState extends State<Register> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +72,13 @@ class _RegisterState extends State<Register> {
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
-                  // Here you can add your sign-up logic, 
+                  // Here you can add your sign-up logic,
                   // such as validating the inputs and registering the user.
 
                   // After successful sign-up, navigate to the Login page
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const Register()),
+                    MaterialPageRoute(builder: (context) => const Login()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

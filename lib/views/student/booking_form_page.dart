@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/time_slot_radio.dart';
 import 'package:pro_mobile/views/student/booking_form_page.dart';
 import 'package:pro_mobile/views/student/room_list_page.dart';
+import 'package:pro_mobile/views/student/booking_status_page.dart';
 
 class Booking extends StatefulWidget {
   final String roomId;
@@ -248,7 +249,7 @@ class _BookingState extends State<Booking> {
                             child: TextFormField(
                           controller: _reasonController,
                           maxLines: null,
-                          minLines: 1,
+                          minLines: 10,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.clear),
@@ -294,3 +295,6 @@ class _BookingState extends State<Booking> {
     );
   }
 }
+
+
+//เพิ่มลิงค์ไปหน้า booking_status

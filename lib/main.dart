@@ -11,6 +11,7 @@ import 'package:pro_mobile/views/student/booking_form_page.dart';
 import 'package:pro_mobile/views/student/booking_status_page.dart';
 import 'package:pro_mobile/views/student/room_list_page.dart';
 import 'package:pro_mobile/views/student/student_history_page.dart';
+import 'package:pro_mobile/views/student/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Register(),
+      home: BookingStatus(),
       debugShowCheckedModeBanner: false,
     );
   }
