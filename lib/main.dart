@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
+import 'package:pro_mobile/views/approver/approver_dashboard.dart';
+import 'package:pro_mobile/views/approver/approver_history_page.dart';
+import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
+import 'package:pro_mobile/views/staff/staff_history_page.dart';
+import 'package:pro_mobile/views/staff/staff_dashboard.dart';
+import 'package:pro_mobile/views/student/booking_form_page.dart';
+import 'package:pro_mobile/views/student/booking_status_page.dart';
+import 'package:pro_mobile/views/student/room_list_page.dart';
+import 'package:pro_mobile/views/student/student_history_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: ManageRoomsPage(),
-      debugShowCheckedModeBanner: false, 
+      debugShowCheckedModeBanner: false,
     );
   }
 }
