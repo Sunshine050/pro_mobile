@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/views/auth/login_page.dart';
+import 'package:pro_mobile/views/auth/register_page.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 import 'package:pro_mobile/views/approver/approver_dashboard.dart';
 import 'package:pro_mobile/views/approver/approver_history_page.dart';
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ManageRoomsPage(),
+      home: Register(),
       debugShowCheckedModeBanner: false,
     );
   }

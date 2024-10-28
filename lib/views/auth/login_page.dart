@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'register.dart'; // Make sure to import the Register page
+import 'package:pro_mobile/views/auth/register_page.dart';
+import 'package:pro_mobile/views/student/room_list_page.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -26,6 +27,12 @@ class _LoginState extends State<Login> {
       String username = _usernameController.text;
       String password = _passwordController.text;
       print('Username: $username, Password: $password');
+
+      // นำไปยัง RoomListPage เมื่อเข้าสู่ระบบสำเร็จ
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Browse()),
+      );
     }
   }
 
@@ -41,15 +48,15 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(height: 60),
-                  Text(
+                  const SizedBox(height: 60),
+                  const Text(
                     'Log In',
                     style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   TextFormField(
                     controller: _usernameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Username',
                       border: OutlineInputBorder(),
                       suffixIcon: Icon(Icons.person),
@@ -61,16 +68,18 @@ class _LoginState extends State<Login> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: _passwordController,
                     obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                         ),
                         onPressed: () {
                           setState(() {
@@ -86,20 +95,20 @@ class _LoginState extends State<Login> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   ElevatedButton(
                     onPressed: _onSignInPressed,
-                    child: Text('SIGN IN'),
+                    child: const Text('SIGN IN'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
-                      minimumSize: Size(double.infinity, 50),
+                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -109,7 +118,8 @@ class _LoginState extends State<Login> {
                           // Navigate to Register page
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const Register()),
+                            MaterialPageRoute(
+                                builder: (context) => const Register()),
                           );
                         },
                         child: const Text(
@@ -119,7 +129,7 @@ class _LoginState extends State<Login> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),

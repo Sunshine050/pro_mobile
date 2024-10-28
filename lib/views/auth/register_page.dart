@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/login/login.dart';
+import 'package:pro_mobile/views/auth/register_page.dart';
 
 
 
@@ -79,7 +79,7 @@ class _RegisterState extends State<Register> {
                   // After successful sign-up, navigate to the Login page
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const Login()),
+                    MaterialPageRoute(builder: (context) => const Register()),
                   );
                 },
                 style: ElevatedButton.styleFrom(
