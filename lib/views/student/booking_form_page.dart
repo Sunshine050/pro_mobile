@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/message_dialog.dart';
 import 'package:pro_mobile/components/time_slot_radio.dart';
+import 'package:pro_mobile/views/student/booking_status_page.dart';
 
 class Booking extends StatefulWidget {
   final String roomId;
@@ -340,14 +341,14 @@ class _BookingState extends State<Booking> {
                                       'Your Reservation for ${roomData["roomName"]}\nhas been confirmed',
                                   onConfirm: () {
                                     // change to status page
-                                    // Navigator.pushReplacement<void, void>(
-                                    //   context,
-                                    //   MaterialPageRoute<void>(
-                                    //     builder: (BuildContext context) =>
-                                    //         const Status(),
-                                    //   ),
-                                    // );
-                                    Navigator.of(context).pop();
+                                    Navigator.pushReplacement<void, void>(
+                                      context,
+                                      MaterialPageRoute<void>(
+                                        builder: (BuildContext context) =>
+                                            BookingStatus(),
+                                      ),
+                                    );
+                                    // Navigator.of(context).pop();
                                   },
                                   // no cancel button
                                   onCancel: null,
