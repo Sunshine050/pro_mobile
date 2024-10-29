@@ -1,107 +1,354 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/components/tabsBar.dart';
 import 'package:pro_mobile/views/staff/staff_history_page.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 import 'package:pro_mobile/components/room_card.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ManageRooms extends StatefulWidget {
-  const ManageRooms({super.key, required String roomId});
+  final bool isAdd;
+  final String roomId;
+  const ManageRooms({super.key, required this.roomId, required this.isAdd});
 
   @override
   State<ManageRooms> createState() => _ManageRoomsPageState();
 }
 
 class _ManageRoomsPageState extends State<ManageRooms> {
-  int _currentIndex = 0; // Default to Home tab
+  late bool slot1Available, slot2Available, slot3Available, slot4Available;
+  String roomImg = "blank.png";
 
-  // ตัวอย่างข้อมูลห้อง
-  final Map<int, Map<String, dynamic>> roomsSample = {
+  final TextEditingController _roomNameController = TextEditingController();
+
+  Map<int, Map<String, dynamic>> roomsSample = {
     1: {
-      'role': 'admin',
-      'roomId': '101',
-      'roomName': 'Room A',
-      'desc': 'Description A',
-      'img': 'room_1.png',
-      'slot_1': 'Available',
-      'slot_2': 'Not Available',
-      'slot_3': 'Available',
-      'slot_4': 'Available',
+      "role": 'student',
+      "roomId": '1',
+      "roomName": 'room_name',
+      "desc":
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+      "img": 'room_1.jpg',
+      "slot_1": "free",
+      "slot_2": "free",
+      "slot_3": "free",
+      "slot_4": "free",
     },
     2: {
-      'role': 'student',
-      'roomId': '102',
-      'roomName': 'Room B',
-      'desc': 'Description B',
-      'img': 'room_1.png',
-      'slot_1': 'Not Available',
-      'slot_2': 'Available',
-      'slot_3': 'Available',
-      'slot_4': 'Not Available',
+      "role": 'student',
+      "roomId": '2',
+      "roomName": 'room_name',
+      "desc":
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+      "img": 'room_1.jpg',
+      "slot_1": "reserved",
+      "slot_2": "reserved",
+      "slot_3": "reserved",
+      "slot_4": "reserved",
     },
-    // เพิ่มข้อมูลห้องได้ตามต้องการ
+    3: {
+      "role": 'student',
+      "roomId": '3',
+      "roomName": 'room_name',
+      "desc":
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+      "img": 'room_1.jpg',
+      "slot_1": "disable",
+      "slot_2": "disable",
+      "slot_3": "disable",
+      "slot_4": "disable",
+    },
+    4: {
+      "role": 'student',
+      "roomId": '4',
+      "roomName": 'room_name',
+      "desc":
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+      "img": 'room_1.jpg',
+      "slot_1": "free",
+      "slot_2": "pending",
+      "slot_3": "reserved",
+      "slot_4": "disable",
+    },
+    5: {
+      "role": 'student',
+      "roomId": '5',
+      "roomName": 'room_name',
+      "desc":
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+      "img": 'room_1.jpg',
+      "slot_1": "free",
+      "slot_2": "free",
+      "slot_3": "free",
+      "slot_4": "free",
+    },
   };
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (!widget.isAdd) {
+      _roomNameController.text =
+          roomsSample[int.parse(widget.roomId)]?["roomName"];
+      slot1Available =
+          (roomsSample[int.parse(widget.roomId)]?["slot_1"] == "free")
+              ? true
+              : false;
+      slot2Available =
+          (roomsSample[int.parse(widget.roomId)]?["slot_2"] == "free")
+              ? true
+              : false;
+      slot3Available =
+          (roomsSample[int.parse(widget.roomId)]?["slot_3"] == "free")
+              ? true
+              : false;
+      slot4Available =
+          (roomsSample[int.parse(widget.roomId)]?["slot_4"] == "free")
+              ? true
+              : false;
+      roomImg = roomsSample[int.parse(widget.roomId)]?["img"];
+    } else {
+      slot1Available = true;
+      slot2Available = true;
+      slot3Available = true;
+      slot4Available = true;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        iconTheme: const IconThemeData(color: Colors.black),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // เพิ่มการย้อนกลับเมื่อกดปุ่ม
+          },
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // TextField for room name
+            Expanded(
+              child: TextField(
+                controller: _roomNameController,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Enter room name',
+                ),
+                style: const TextStyle(color: Colors.black, fontSize: 20),
+              ),
+            ),
+            // Edit icon button
+            IconButton(
+              icon: const Icon(Icons.edit, color: Colors.blue),
+              onPressed: () {
+                // Function to show dialog for editing room name
+                _showEditRoomNameDialog(context);
+              },
+            ),
+          ],
+        ),
+        centerTitle: true,
+      ),
+      body: Column(
         children: [
-          // หน้า Home ใช้ RoomCard แทน ManageRoomsPage
-          ListView.builder(
-            itemCount: roomsSample.length,
-            itemBuilder: (context, index) {
-              final room = roomsSample[
-                  index + 1]; // index + 1 because our keys start from 1
-              return RoomCard(
-                role: room!['role'],
-                roomId: room['roomId'],
-                roomName: room['roomName'],
-                desc: room['desc'],
-                img: room['img'],
-                slot_1: room['slot_1'],
-                slot_2: room['slot_2'],
-                slot_3: room['slot_3'],
-                slot_4: room['slot_4'],
-              );
-            },
+          // Room Image with Edit Icon
+          Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  height: 250,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/rooms/${roomImg}', // เส้นทางไปยังรูปภาพ
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 250,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 24,
+                right: 24,
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.blue,
+                  child: IconButton(
+                    icon: const Icon(Icons.edit, color: Colors.white),
+                    onPressed: () {
+                      // ฟังก์ชันเลือกภาพ
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-          // หน้า History
-          const Center(child: Text("History Page")),
-          // หน้า Dashboard
-          const Center(child: Text("Dashboard Page")),
-          // หน้า Profile
-          const Center(child: Text("Profile Page")),
+          // const SizedBox(height: 20),
+
+          // Time Slots with Disable/Open Toggle
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Expanded(
+              child: Column(
+                children: [
+                  timeSlotWidget("08:00 - 10:00", slot1Available, Colors.blue),
+                  timeSlotWidget("10:00 - 12:00", slot2Available, Colors.blue),
+                  timeSlotWidget("13:00 - 15:00", slot3Available, Colors.blue),
+                  timeSlotWidget("15:00 - 17:00", slot4Available, Colors.blue),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Room Description Field
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: TextFormField(
+              decoration: InputDecoration(
+                labelText: "Room Description",
+                hintText: "[room_desc]",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              ),
+              maxLines: 2,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Description is required';
+                }
+                return null;
+              },
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Confirm Button
+          ElevatedButton(
+            onPressed: () {
+              // ฟังก์ชันยืนยัน
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromRGBO(16, 80, 176, 1.0),
+              padding: const EdgeInsets.symmetric(
+                  vertical: 10, horizontal: 20), // ปรับขนาดให้เล็กลง
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              shadowColor: Colors.blueAccent.withOpacity(0.5),
+              elevation: 20,
+            ),
+            child: const Text("Confirm",
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white)),
+          ),
+          Spacer(),
+          TabsbarNavigator(role: "staff")
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: const Color(0xFF1050B0),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        currentIndex: _currentIndex,
-        onTap: _onItemTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Home',
+    );
+  }
+
+  // Function to show a dialog for editing room name
+  void _showEditRoomNameDialog(BuildContext context) {
+    TextEditingController _editController =
+        TextEditingController(text: _roomNameController.text);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Edit Room Name"),
+          content: TextField(
+            controller: _editController,
+            decoration: const InputDecoration(hintText: "Enter new room name"),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'History',
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _roomNameController.text =
+                      _editController.text; // Update room name
+                });
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text("Confirm"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Widget for each time slot with a cleaner appearance
+  Widget timeSlotWidget(String time, bool available, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          // Time slot button with solid background and shadow
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            decoration: BoxDecoration(
+              color: available ? color : Colors.grey[400],
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withOpacity(0.2),
+                  offset: const Offset(2, 4),
+                  blurRadius: 6,
+                ),
+              ],
+            ),
+            child: Text(
+              time,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.insert_chart_outlined_outlined),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
-            label: 'Profile',
+          Row(
+            children: [
+              const Text("Disable", style: TextStyle(fontSize: 12)),
+              Switch(
+                value: available,
+                onChanged: (value) {
+                  setState(() {
+                    if (time == "08:00 - 10:00") slot1Available = value;
+                    if (time == "10:00 - 12:00") slot2Available = value;
+                    if (time == "13:00 - 15:00") slot3Available = value;
+                    if (time == "15:00 - 17:00") slot4Available = value;
+                  });
+                },
+              ),
+              const Text("Open", style: TextStyle(fontSize: 12)),
+            ],
           ),
         ],
       ),

@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/message_dialog.dart';
 import 'package:pro_mobile/components/room_card_sm.dart';
-<<<<<<< HEAD:lib/views/profile.dart
 import 'package:pro_mobile/components/tabsBar.dart';
-import 'package:pro_mobile/views/home.dart';
-=======
-import 'package:pro_mobile/widgets/homepage.dart';
->>>>>>> 8a627f6b53e05b18956db88e5d2ae7d1a4ccc950:lib/widgets/profile.dart
+import 'package:pro_mobile/views/homepage.dart';
 
 class Profile extends StatefulWidget {
   final String userId, role;
@@ -125,19 +121,11 @@ class _ProfileState extends State<Profile> {
                         return MessageDialog(
                           content: 'Are you sure?',
                           onConfirm: () {
-<<<<<<< HEAD:lib/views/profile.dart
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                   builder: (context) => Homepage(),
                                 ),
                                 (Route<dynamic> route) => false);
-=======
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => Homepage(),
-                              ),
-                            );
->>>>>>> 8a627f6b53e05b18956db88e5d2ae7d1a4ccc950:lib/widgets/profile.dart
                           },
                           onCancel: () {
                             // close dialog

@@ -1,12 +1,11 @@
 // ignore_for_file: unnecessary_const
 
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/components/message_dialog.dart';
 import 'package:pro_mobile/components/time_slot_radio.dart';
-import 'package:pro_mobile/views/student/booking_status_page.dart';
 
 class Booking extends StatefulWidget {
   final String roomId;
-
   const Booking({super.key, required this.roomId});
 
   @override
@@ -17,6 +16,70 @@ class _BookingState extends State<Booking> {
   String? _selectedSlot;
   final TextEditingController _reasonController = TextEditingController();
   late Map<String, dynamic> roomData;
+
+  // mock uo rooms data
+  Map<int, Map<String, dynamic>> roomsSample = {
+    1: {
+      "role": 'student',
+      "roomId": '1',
+      "roomName": 'room_name',
+      "desc":
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+      "img": 'room_1.jpg',
+      "slot_1": "free",
+      "slot_2": "free",
+      "slot_3": "free",
+      "slot_4": "free",
+    },
+    2: {
+      "role": 'student',
+      "roomId": '2',
+      "roomName": 'room_name',
+      "desc":
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+      "img": 'room_1.jpg',
+      "slot_1": "reserved",
+      "slot_2": "reserved",
+      "slot_3": "reserved",
+      "slot_4": "reserved",
+    },
+    3: {
+      "role": 'student',
+      "roomId": '3',
+      "roomName": 'room_name',
+      "desc":
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+      "img": 'room_1.jpg',
+      "slot_1": "disable",
+      "slot_2": "disable",
+      "slot_3": "disable",
+      "slot_4": "disable",
+    },
+    4: {
+      "role": 'student',
+      "roomId": '4',
+      "roomName": 'room_name',
+      "desc":
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+      "img": 'room_1.jpg',
+      "slot_1": "free",
+      "slot_2": "pending",
+      "slot_3": "reserved",
+      "slot_4": "disable",
+    },
+    5: {
+      "role": 'student',
+      "roomId": '5',
+      "roomName": 'room_name',
+      "desc":
+          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+      "img": 'room_1.jpg',
+      "slot_1": "free",
+      "slot_2": "free",
+      "slot_3": "free",
+      "slot_4": "free",
+    },
+  };
 
   @override
   void initState() {
@@ -29,16 +92,7 @@ class _BookingState extends State<Booking> {
     // api get room
 
     // mock up data
-    roomData = {
-      "roomId": "1",
-      "roomName": 'room_name',
-      "desc": 'room_desc',
-      "img": 'room_1.jpg',
-      "slot_1": "free",
-      "slot_2": "reserved",
-      "slot_3": "pending",
-      "slot_4": "free",
-    };
+    roomData = roomsSample[int.parse(widget.roomId)]!;
   }
 
   void submit() {}
@@ -109,9 +163,11 @@ class _BookingState extends State<Booking> {
                           ),
                         ]),
                         Row(children: [
-                          Text(
-                            roomData["desc"],
-                            style: Theme.of(context).textTheme.bodyMedium,
+                          Flexible(
+                            child: Text(
+                              roomData["desc"],
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                           ),
                         ]),
                         const SizedBox(
@@ -247,7 +303,7 @@ class _BookingState extends State<Booking> {
                             child: TextFormField(
                           controller: _reasonController,
                           maxLines: null,
-                          minLines: 10,
+                          minLines: 1,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.clear),
@@ -258,9 +314,6 @@ class _BookingState extends State<Booking> {
                             labelText: 'Reason',
                             hintText: 'Please enter your reason',
                             helperText: 'required',
-                            errorText: _reasonController.text.isEmpty
-                                ? "Please enter your reason"
-                                : null,
                             border: const OutlineInputBorder(),
                           ),
                         )),
@@ -278,6 +331,30 @@ class _BookingState extends State<Booking> {
                         ? null
                         : (() {
                             // api
+
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return MessageDialog(
+                                  content:
+                                      'Your Reservation for ${roomData["roomName"]}\nhas been confirmed',
+                                  onConfirm: () {
+                                    // change to status page
+                                    // Navigator.pushReplacement<void, void>(
+                                    //   context,
+                                    //   MaterialPageRoute<void>(
+                                    //     builder: (BuildContext context) =>
+                                    //         const Status(),
+                                    //   ),
+                                    // );
+                                    Navigator.of(context).pop();
+                                  },
+                                  // no cancel button
+                                  onCancel: null,
+                                  messageType: 'ok',
+                                );
+                              },
+                            );
                           }),
                     child: const Text(
                       "Reserve this room",
@@ -293,6 +370,3 @@ class _BookingState extends State<Booking> {
     );
   }
 }
-
-
-//เพิ่มลิงค์ไปหน้า booking_status
