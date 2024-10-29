@@ -28,14 +28,31 @@ class _LoginState extends State<Login> {
       String password = _passwordController.text;
       print('Username: $username, Password: $password');
 
-      // นำไปยัง RoomListPage เมื่อเข้าสู่ระบบสำเร็จ
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const Browse(
-                  role: {},
-                )),
-      );
+      if (username == "student") {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const Browse(
+                      role: "student",
+                    )),
+            (Route<dynamic> route) => false);
+      } else if (username == "approver") {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const Browse(
+                      role: "approver",
+                    )),
+            (Route<dynamic> route) => false);
+      } else if (username == "staff") {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const Browse(
+                      role: "staff",
+                    )),
+            (Route<dynamic> route) => false);
+      }
     }
   }
 
@@ -105,7 +122,6 @@ class _LoginState extends State<Login> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

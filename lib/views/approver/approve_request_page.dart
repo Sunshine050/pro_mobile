@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/components/tabsBar.dart';
 
 class ApproveRequestPage extends StatefulWidget {
   @override
@@ -114,83 +115,90 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
                 ],
               ),
             )
-          : ListView.builder(
-              padding: EdgeInsets.all(8),
-              itemCount: reservations.length,
-              itemBuilder: (context, index) {
-                final reservation = reservations[index];
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          reservation['roomTitle'],
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(reservation['time']),
-                        Text(reservation['date']),
-                        SizedBox(height: 8),
-                        Text("Req by: ${reservation['userName']}"),
-                        SizedBox(height: 8),
-                        TextField(
-                          enabled: false,
-                          decoration: InputDecoration(
-                            labelText: 'Reason',
-                            hintText: reservation['reason'],
-                            border: OutlineInputBorder(),
-                          ),
-                        ),
-                        SizedBox(height: 12),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                _showConfirmationDialog(
-                                    context, 'approve', index);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.all(8),
+                    itemCount: reservations.length,
+                    itemBuilder: (context, index) {
+                      final reservation = reservations[index];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                reservation['roomTitle'],
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              child: Row(
+                              SizedBox(height: 8),
+                              Text(reservation['time']),
+                              Text(reservation['date']),
+                              SizedBox(height: 8),
+                              Text("Req by: ${reservation['userName']}"),
+                              SizedBox(height: 8),
+                              TextField(
+                                enabled: false,
+                                decoration: InputDecoration(
+                                  labelText: 'Reason',
+                                  hintText: reservation['reason'],
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                              SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Icon(Icons.check),
-                                  SizedBox(width: 4),
-                                  Text('Approve'),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      _showConfirmationDialog(
+                                          context, 'approve', index);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.check),
+                                        SizedBox(width: 4),
+                                        Text('Approve'),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      _showConfirmationDialog(
+                                          context, 'reject', index);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.close),
+                                        SizedBox(width: 4),
+                                        Text('Reject'),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
-                            SizedBox(width: 8),
-                            ElevatedButton(
-                              onPressed: () {
-                                _showConfirmationDialog(
-                                    context, 'reject', index);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.close),
-                                  SizedBox(width: 4),
-                                  Text('Reject'),
-                                ],
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+                TabsbarNavigator(role: "approver")
+              ],
             ),
     );
   }

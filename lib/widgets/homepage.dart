@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/views/auth/login_page.dart';
-import 'package:pro_mobile/widgets/homepage.dart'; 
-
+import 'package:pro_mobile/widgets/homepage.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -49,14 +48,15 @@ class _HomepageState extends State<Homepage> {
                 ElevatedButton(
                   onPressed: () {
                     // Navigate to Login page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Login()),
-                    );
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Login()),
+                        (Route<dynamic> route) => false);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF1050B0), // Updated Button color
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

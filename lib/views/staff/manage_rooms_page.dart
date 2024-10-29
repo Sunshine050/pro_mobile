@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/views/staff/staff_history_page.dart';
-import 'package:pro_mobile/views/staff/manage_rooms_page.dart'; 
+import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 import 'package:pro_mobile/components/room_card.dart';
 
 class ManageRooms extends StatefulWidget {
@@ -56,7 +56,8 @@ class _ManageRoomsPageState extends State<ManageRooms> {
           ListView.builder(
             itemCount: roomsSample.length,
             itemBuilder: (context, index) {
-              final room = roomsSample[index + 1]; // index + 1 because our keys start from 1
+              final room = roomsSample[
+                  index + 1]; // index + 1 because our keys start from 1
               return RoomCard(
                 role: room!['role'],
                 roomId: room['roomId'],

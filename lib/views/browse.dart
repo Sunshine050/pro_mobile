@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/components/tabsBar.dart';
 // import '../components/filters.dart';
 import '../components/room_card.dart';
 import '../components/search_btn.dart';
 import '../models/filter_model.dart';
 
 class Browse extends StatefulWidget {
-  const Browse({super.key, required role});
+  final String role;
+  const Browse({super.key, required this.role});
 
   @override
   State<Browse> createState() => _BrowseState();
@@ -15,68 +17,7 @@ class _BrowseState extends State<Browse> {
   final filtersModel = FiltersModel();
   Map<int, Map<String, dynamic>> filteredRooms = {};
 
-  Map<int, Map<String, dynamic>> roomsSample = {
-    1: {
-      "role": 'student',
-      "roomId": '1',
-      "roomName": 'room_name',
-      "desc":
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
-      "img": 'room_1.jpg',
-      "slot_1": "free",
-      "slot_2": "free",
-      "slot_3": "free",
-      "slot_4": "free",
-    },
-    2: {
-      "role": 'student',
-      "roomId": '2',
-      "roomName": 'room_name',
-      "desc":
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
-      "img": 'room_1.jpg',
-      "slot_1": "reserved",
-      "slot_2": "reserved",
-      "slot_3": "reserved",
-      "slot_4": "reserved",
-    },
-    3: {
-      "role": 'student',
-      "roomId": '3',
-      "roomName": 'room_name',
-      "desc":
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
-      "img": 'room_1.jpg',
-      "slot_1": "disable",
-      "slot_2": "disable",
-      "slot_3": "disable",
-      "slot_4": "disable",
-    },
-    4: {
-      "role": 'student',
-      "roomId": '4',
-      "roomName": 'room_name',
-      "desc":
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
-      "img": 'room_1.jpg',
-      "slot_1": "free",
-      "slot_2": "pending",
-      "slot_3": "reserved",
-      "slot_4": "disable",
-    },
-    5: {
-      "role": 'student',
-      "roomId": '5',
-      "roomName": 'room_name',
-      "desc":
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
-      "img": 'room_1.jpg',
-      "slot_1": "free",
-      "slot_2": "free",
-      "slot_3": "free",
-      "slot_4": "free",
-    },
-  };
+  late Map<int, Map<String, dynamic>> roomsSample;
   List<String> filtersList = [
     "Any Available",
     "08:00 - 10:00",
@@ -90,6 +31,68 @@ class _BrowseState extends State<Browse> {
     super.initState();
 
     // api get rooms
+    roomsSample = {
+      1: {
+        "role": widget.role,
+        "roomId": '1',
+        "roomName": 'room_name',
+        "desc":
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+        "img": 'room_1.jpg',
+        "slot_1": "free",
+        "slot_2": "free",
+        "slot_3": "free",
+        "slot_4": "free",
+      },
+      2: {
+        "role": widget.role,
+        "roomId": '2',
+        "roomName": 'room_name',
+        "desc":
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+        "img": 'room_1.jpg',
+        "slot_1": "reserved",
+        "slot_2": "reserved",
+        "slot_3": "reserved",
+        "slot_4": "reserved",
+      },
+      3: {
+        "role": widget.role,
+        "roomId": '3',
+        "roomName": 'room_name',
+        "desc":
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+        "img": 'room_1.jpg',
+        "slot_1": "disable",
+        "slot_2": "disable",
+        "slot_3": "disable",
+        "slot_4": "disable",
+      },
+      4: {
+        "role": widget.role,
+        "roomId": '4',
+        "roomName": 'room_name',
+        "desc":
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+        "img": 'room_1.jpg',
+        "slot_1": "free",
+        "slot_2": "pending",
+        "slot_3": "reserved",
+        "slot_4": "disable",
+      },
+      5: {
+        "role": widget.role,
+        "roomId": '5',
+        "roomName": 'room_name',
+        "desc":
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
+        "img": 'room_1.jpg',
+        "slot_1": "free",
+        "slot_2": "free",
+        "slot_3": "free",
+        "slot_4": "free",
+      }
+    };
 
     _filterRooms();
     filtersModel.addListener(() {
@@ -162,61 +165,67 @@ class _BrowseState extends State<Browse> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color.fromARGB(255, 45, 116, 221)),
-          useMaterial3: true,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 45, 116, 221)),
+        useMaterial3: true,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text("Room List"),
+          actions: [
+            Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: SearchButton())
+          ],
         ),
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text("Room List"),
-            actions: [
-              Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: SearchButton())
-            ],
-          ),
-          body: SafeArea(
-              child: Padding(
-            padding: const EdgeInsets.only(left: 24, right: 24),
-            child: Column(
+        body: SafeArea(
+          child: Stack(children: [
+            Column(
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                          padding: const EdgeInsets.only(top: 8, bottom: 8),
-                          child:
-                              // Filters(),
-                              Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Wrap(
-                                spacing: 4.0,
-                                children: filtersList.map((e) {
-                                  return FilterChip(
-                                    label: Text(
-                                      e,
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                    ),
-                                    labelPadding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    selected: filtersModel.isSelected(e),
-                                    onSelected: (bool selected) => setState(() {
-                                      filtersModel.updateFilter(e);
-                                    }),
-                                  );
-                                }).toList(),
-                              ),
-                            ],
-                          )),
-                    ),
-                  ],
+                // filter row
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                            padding: const EdgeInsets.only(top: 8, bottom: 8),
+                            child:
+                                // Filters(),
+                                Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Wrap(
+                                  spacing: 4.0,
+                                  children: filtersList.map((e) {
+                                    return FilterChip(
+                                      label: Text(
+                                        e,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
+                                      ),
+                                      labelPadding: const EdgeInsets.symmetric(
+                                          horizontal: 4),
+                                      selected: filtersModel.isSelected(e),
+                                      onSelected: (bool selected) =>
+                                          setState(() {
+                                        filtersModel.updateFilter(e);
+                                      }),
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
+                // list room
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.only(bottom: 24),
@@ -225,7 +234,8 @@ class _BrowseState extends State<Browse> {
                       final itemKey = filteredRooms.keys.elementAt(index);
                       final itemData = filteredRooms[itemKey];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 24),
                         child: RoomCard(
                           role: itemData?['role'],
                           roomId: itemData?['roomId'],
@@ -241,10 +251,25 @@ class _BrowseState extends State<Browse> {
                     },
                   ),
                 ),
+                TabsbarNavigator(role: widget.role)
               ],
             ),
-          )),
-        ));
+            Positioned(
+              right: 20.0,
+              bottom: 70.0,
+              child: FloatingActionButton(
+                backgroundColor: Colors.white,
+                onPressed: () {
+                  // Navigator.push(
+                  //     context, MaterialPageRoute(builder: (context) => ));
+                },
+                child: const Icon(Icons.add),
+              ),
+            ),
+          ]),
+        ),
+      ),
+    );
   }
 
   @override

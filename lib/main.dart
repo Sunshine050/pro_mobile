@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/views/home.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 import 'package:pro_mobile/widgets/staff.dart';
 import 'package:pro_mobile/widgets/student.dart'; // นำเข้าคลาส Student ที่ใช้ในหน้าแรก
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue, // ตั้งค่าสีหลักของแอป
       ),
-      home: const Student(), // ใช้คลาส Student เป็นหน้าแรก
+      home: const Homepage(), // ใช้คลาส Homepage เป็นหน้าแรก
       debugShowCheckedModeBanner: false, // ปิดแบนเนอร์โหมดตรวจสอบ
     );
   }
