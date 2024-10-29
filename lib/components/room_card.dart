@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/time_slot.dart';
-import 'package:pro_mobile/views/booking.dart';
+import 'package:pro_mobile/widgets/booking.dart';
 
 class RoomCard extends StatefulWidget {
   final String role,
@@ -74,7 +74,7 @@ class _RoomCardState extends State<RoomCard> {
                           BorderRadius.only(bottomRight: Radius.circular(16)),
                     ),
                     child: Image.asset(
-                      "assets/rooms/${widget.img}",
+                      widget.img, // เปลี่ยนตรงนี้ให้ใช้ widget.img
                       fit: BoxFit.cover,
                       height: 165,
                     ),

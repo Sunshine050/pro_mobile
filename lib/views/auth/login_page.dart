@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/views/auth/register_page.dart';
-import 'package:pro_mobile/views/browse.dart';
+import 'package:pro_mobile/widgets/browse.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -26,8 +26,54 @@ class _LoginState extends State<Login> {
     if (_formKey.currentState!.validate()) {
       String username = _usernameController.text;
       String password = _passwordController.text;
-      print('Username: $username, Password: $password');
 
+      // ตรวจสอบประเภทผู้ใช้จากอีเมล
+      String role;
+      if (username.endsWith('student@lamduan.mfu.ac.th')) {
+        role = 'student';
+      } else if (username.endsWith('staff@lamduan.mfu.ac.th')) {
+        role = 'staff';
+      } else if (username.endsWith('approver@lamduan.mfu.ac.th')) {
+        role = 'approver';
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Invalid email domain')),
+        );
+        print('Login failed: Invalid email domain for $username');
+        return;
+      }
+
+      // ตรวจสอบรหัสผ่านแบบ hardcoded
+      String expectedPassword;
+
+      // กำหนดรหัสผ่านตามบทบาท
+      if (role == 'student') {
+        expectedPassword =
+            'studentPassword'; // เปลี่ยนเป็นรหัสผ่านที่ต้องการสำหรับนักเรียน
+      } else if (role == 'staff') {
+        expectedPassword =
+            'staffPassword'; // เปลี่ยนเป็นรหัสผ่านที่ต้องการสำหรับเจ้าหน้าที่
+      } else if (role == 'approver') {
+        expectedPassword =
+            'approverPassword'; // เปลี่ยนเป็นรหัสผ่านที่ต้องการสำหรับผู้อนุมัติ
+      } else {
+        // ถ้า role ไม่ถูกต้อง
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Role not recognized')),
+        );
+        return;
+      }
+
+      // ตรวจสอบรหัสผ่าน
+      if (password != expectedPassword) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Incorrect password')),
+        );
+        print('Login failed: Incorrect password for $username');
+        return;
+      }
+
+<<<<<<< HEAD
       if (username == "student") {
         Navigator.pushAndRemoveUntil(
             context,
@@ -53,6 +99,16 @@ class _LoginState extends State<Login> {
                     )),
             (Route<dynamic> route) => false);
       }
+=======
+      // นำไปยัง RoomListPage เมื่อเข้าสู่ระบบสำเร็จ
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Browse(
+                  role: role, // ส่ง role ไปยังหน้า Browse
+                )),
+      );
+>>>>>>> 8a627f6b53e05b18956db88e5d2ae7d1a4ccc950
     }
   }
 
@@ -134,7 +190,6 @@ class _LoginState extends State<Login> {
                       const Text('New Member?'),
                       TextButton(
                         onPressed: () {
-                          // Navigate to Register page
                           Navigator.push(
                             context,
                             MaterialPageRoute(
