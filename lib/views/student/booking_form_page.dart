@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/time_slot_radio.dart';
-import 'package:pro_mobile/views/student/booking_form_page.dart';
-import 'package:pro_mobile/views/student/room_list_page.dart';
 import 'package:pro_mobile/views/student/booking_status_page.dart';
 
 class Booking extends StatefulWidget {

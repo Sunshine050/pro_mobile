@@ -26,6 +26,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-   - assets/rooms/
-   - assets/icon2/
-   - assets/user/
+    - assets/rooms/
+    - assets/icon2/
+    - assets/user/

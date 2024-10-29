@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+import '/components/filters.dart';
+import '/components/room_card.dart';
+import '/components/search_btn.dart'; 
+
+class Browse extends StatefulWidget {
+  final Map<int, Map<String, dynamic>> roomsSample;
+
+  const Browse({super.key, required this.roomsSample});
+
+  @override
+  _BrowseState createState() => _BrowseState();
+}
+
+class _BrowseState extends State<Browse> {
+  late List<Map<String, dynamic>> filteredRooms;
+
+  @override
+  void initState() {
+    super.initState();
+    filteredRooms = widget.roomsSample.values.toList(); // เริ่มต้นด้วยห้องทั้งหมด
+  }
+
+  void _filterRooms(String searchQuery) {
+    setState(() {
+      if (searchQuery.isEmpty) {
+        // ถ้าไม่มีการค้นหา ให้แสดงห้องทั้งหมด
+        filteredRooms = widget.roomsSample.values.toList();
+      } else {
+        // กรองห้องตามคำค้นหา
+        filteredRooms = widget.roomsSample.values.where((room) {
+          return room['roomName'].toLowerCase().contains(searchQuery.toLowerCase());
+        }).toList();
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Filters(),
+                  ),
+                ),
+                SearchButton(onSearch: (searchQuery) {
+                  _filterRooms(searchQuery); // เรียกใช้ฟังก์ชันกรองห้อง
+                }),
+              ],
+            ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.only(bottom: 24),
+                itemCount: filteredRooms.length,
+                itemBuilder: (context, index) {
+                  final itemData = filteredRooms[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: RoomCard(
+                      role: itemData['role'] ?? 'student',
+                      roomId: itemData['roomId'] ?? '',
+                      roomName: itemData['roomName'] ?? 'Room Name',
+                      desc: itemData['desc'] ?? '',
+                      img: itemData['img'] ?? '',
+                      slot_1: itemData['slot_1'] ?? 'N/A',
+                      slot_2: itemData['slot_2'] ?? 'N/A',
+                      slot_3: itemData['slot_3'] ?? 'N/A',
+                      slot_4: itemData['slot_4'] ?? 'N/A',
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
