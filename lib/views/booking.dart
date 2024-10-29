@@ -1,9 +1,7 @@
-// ignore_for_file: unnecessary_const
-
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/time_slot_radio.dart';
 import 'package:pro_mobile/views/student/booking_status_page.dart';
-import 'package:pro_mobile/views/home.dart';
+import 'package:pro_mobile/views/student/student_history_page.dart';
 import '../components/message_dialog.dart';
 
 class Booking extends StatefulWidget {
@@ -20,21 +18,67 @@ class _BookingState extends State<Booking> {
   final TextEditingController _reasonController = TextEditingController();
   late Map<String, dynamic> roomData;
 
-  // mock up rooms data
+  // Mock up rooms data
   Map<int, Map<String, dynamic>> roomsSample = {
     1: {
       "role": 'student',
       "roomId": '1',
-      "roomName": 'Room Name 1',
-      "desc": 'Description for room 1.',
+      "roomName": 'Room 1',
+      "desc": 'A spacious room perfect for group study.',
       "img": 'room_1.jpg',
       "slot_1": "free",
       "slot_2": "free",
       "slot_3": "free",
       "slot_4": "free",
     },
-    // Add other room data...
+    2: {
+      "role": 'student',
+      "roomId": '2',
+      "roomName": 'Room 2',
+      "desc": 'A quiet room for focused studying.',
+      "img": 'room_2.jpg',
+      "slot_1": "reserved",
+      "slot_2": "reserved",
+      "slot_3": "reserved",
+      "slot_4": "reserved",
+    },
+    3: {
+      "role": 'student',
+      "roomId": '3',
+      "roomName": 'Room 3',
+      "desc": 'A comfortable room for meetings.',
+      "img": 'room_3.jpg',
+      "slot_1": "disable",
+      "slot_2": "disable",
+      "slot_3": "disable",
+      "slot_4": "disable",
+    },
+    4: {
+      "role": 'student',
+      "roomId": '4',
+      "roomName": 'Room 4',
+      "desc": 'A bright room with natural light.',
+      "img": 'room_4.jpg',
+      "slot_1": "free",
+      "slot_2": "pending",
+      "slot_3": "reserved",
+      "slot_4": "disable",
+    },
+    5: {
+      "role": 'student',
+      "roomId": '5',
+      "roomName": 'Room 5',
+      "desc": 'A versatile room for all types of activities.',
+      "img": 'room_5.jpg',
+      "slot_1": "free",
+      "slot_2": "free",
+      "slot_3": "free",
+      "slot_4": "free",
+    },
   };
+
+  int _currentIndex =
+      0; // Track the current index for the bottom navigation bar
 
   @override
   void initState() {
@@ -43,7 +87,16 @@ class _BookingState extends State<Booking> {
   }
 
   void getRoom() {
-    roomData = roomsSample[int.parse(widget.roomId)]!;
+    if (roomsSample.containsKey(int.parse(widget.roomId))) {
+      roomData = roomsSample[int.parse(widget.roomId)]!;
+    } else {
+      // Handle invalid room ID, show a message or set default roomData
+      roomData = {
+        "roomName": "Room Not Found",
+        "desc": "The requested room does not exist.",
+        "img": 'default_room.jpg', // Use a default image
+      };
+    }
   }
 
   // Check if a slot is available
@@ -51,123 +104,160 @@ class _BookingState extends State<Booking> {
     return slotValue == "free";
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color.fromARGB(255, 45, 116, 221)),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back)),
-          title: const Text("Room Reservation"),
-          centerTitle: true,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Booking'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(); // กลับไปยังหน้าก่อนหน้า
+          },
         ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: ListView(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Image.asset(
-                    "assets/rooms/${roomData['img']}",
-                    fit: BoxFit.cover,
+      ),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: [
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: ListView(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.asset(
+                      "assets/rooms/${roomData['img']}",
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  roomData["roomName"],
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  roomData["desc"],
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 10),
-                // Slot radio
-                Wrap(
-                  spacing: 4.0,
-                  children: <Widget>[
-                    for (int i = 1; i <= 4; i++)
-                      RadioListTile(
-                        title: TimeSlotRadio(
-                          time: getTimeSlot(i),
-                          status: roomData["slot_$i"],
+                  const SizedBox(height: 16),
+                  Text(
+                    roomData["roomName"],
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    roomData["desc"],
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 10),
+                  // Slot radio
+                  Wrap(
+                    spacing: 4.0,
+                    children: <Widget>[
+                      for (int i = 1; i <= 4; i++)
+                        RadioListTile(
+                          title: TimeSlotRadio(
+                            time: getTimeSlot(i),
+                            status: roomData["slot_$i"],
+                          ),
+                          value: "slot_$i",
+                          groupValue: _selectedSlot,
+                          onChanged: isAvailable(roomData["slot_$i"])
+                              ? (value) => setState(() {
+                                    _selectedSlot = value as String?;
+                                  })
+                              : null,
                         ),
-                        value: "slot_$i",
-                        groupValue: _selectedSlot,
-                        onChanged: isAvailable(roomData["slot_$i"])
-                            ? (value) => setState(() {
-                                  _selectedSlot = value as String?;
-                                })
-                            : null,
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                TextFormField(
-                  controller: _reasonController,
-                  maxLines: null,
-                  minLines: 1,
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _reasonController.clear();
-                      },
-                    ),
-                    labelText: 'Reason',
-                    hintText: 'Please enter your reason',
-                    helperText: 'required',
-                    border: const OutlineInputBorder(),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(16, 80, 176, 1.0)),
-                  onPressed: _reasonController.text.isEmpty
-                      ? null
-                      : () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return MessageDialog(
-                                content:
-                                    'Your Reservation for ${roomData["roomName"]}\nhas been confirmed',
-                                onConfirm: () {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      builder: (context) => BookingStatus(),
-                                    ),
-                                  );
-                                },
-                                onCancel: null,
-                                messageType: 'ok',
-                              );
-                            },
-                          );
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    controller: _reasonController,
+                    maxLines: null,
+                    minLines: 1,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _reasonController.clear();
                         },
-                  child: const Text(
-                    "Reserve this room",
-                    style: TextStyle(
-                      color: Colors.white,
+                      ),
+                      labelText: 'Reason',
+                      hintText: 'Please enter your reason',
+                      helperText: 'required',
+                      border: const OutlineInputBorder(),
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromRGBO(16, 80, 176, 1.0)),
+                    onPressed: (_reasonController.text.isEmpty ||
+                            _selectedSlot == null)
+                        ? null // Disable the button if fields are empty or no slot selected
+                        : () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return MessageDialog(
+                                  content:
+                                      'Your Reservation for ${roomData["roomName"]}\nhas been confirmed',
+                                  onConfirm: () {
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (context) => BookingStatus(),
+                                      ),
+                                    );
+                                  },
+                                  onCancel: null,
+                                  messageType: 'ok',
+                                );
+                              },
+                            );
+                          },
+                    child: const Text(
+                      "Reserve this room",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
+          // Status Page
+          Center(child: Text('Status Page')),
+          // History Page
+          const History(),
+          // Profile Page
+          Center(child: Text('Profile Page')),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: const Color(0xFF1050B0),
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        currentIndex: _currentIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.check_circle_outline_outlined),
+            label: 'Status',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'History',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_2_outlined),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }
