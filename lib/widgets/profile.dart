@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/message_dialog.dart';
 import 'package:pro_mobile/components/room_card_sm.dart';
-import 'package:pro_mobile/views/home.dart';
+import 'package:pro_mobile/widgets/homepage.dart';
 
 class Profile extends StatefulWidget {
   final String userId;
@@ -88,7 +88,7 @@ class _ProfileState extends State<Profile> {
         "userId": "1",
         "role": "student",
         "username": "username",
-        "email": "user_email@gmail.com"
+        "email": "user_email@lamduan.mfu.ac.th"
       }
     };
   }
@@ -120,11 +120,11 @@ class _ProfileState extends State<Profile> {
                         return MessageDialog(
                           content: 'Are you sure?',
                           onConfirm: () {
-                           Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                        builder: (context) => Homepage(),
-                                      ),
-                                    );
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => Homepage(),
+                              ),
+                            );
                           },
                           onCancel: () {
                             // close dialog

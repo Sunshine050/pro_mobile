@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pro_mobile/views/auth/login_page.dart';
-import 'package:pro_mobile/widgets/homepage.dart'; 
-
+import 'package:pro_mobile/views/auth/login_page.dart'; // Make sure to import the Login page
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});

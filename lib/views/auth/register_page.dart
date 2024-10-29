@@ -15,6 +15,44 @@ class _RegisterState extends State<Register> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
+  String? role; // สร้างตัวแปรเพื่อเก็บ role
+
+  void _register() {
+    // ตรวจสอบอีเมลและกำหนด role
+    String email = emailController.text.trim();
+
+    if (email.endsWith('student@lamduan.mfu.ac.th')) {
+      role = 'student';
+    } else if (email.endsWith('staff@lamduan.mfu.ac.th')) {
+      role = 'staff';
+    } else if (email.endsWith('approver@lamduan.mfu.ac.th')) {
+      role = 'approver';
+    } else {
+      // แสดงข้อความแจ้งเตือนถ้าอีเมลไม่ถูกต้อง
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid email domain')),
+      );
+      return;
+    }
+
+    // แสดงข้อความแจ้งเตือนเมื่อการลงทะเบียนสำเร็จ
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Registration successful!'),
+        duration: Duration(seconds: 2), // ตั้งระยะเวลาในการแสดง SnackBar
+      ),
+    );
+
+    // ใช้ Future.delayed เพื่อหน่วงเวลาการนำทางไปยังหน้าล็อกอิน
+    Future.delayed(Duration(seconds: 2), () {
+      // นำผู้ใช้ไปยังหน้า Login หลังจากลงทะเบียนสำเร็จ
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Login()),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,16 +109,7 @@ class _RegisterState extends State<Register> {
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
-                  // Here you can add your sign-up logic,
-                  // such as validating the inputs and registering the user.
-
-                  // After successful sign-up, navigate to the Login page
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Login()),
-                  );
-                },
+                onPressed: _register,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   padding: const EdgeInsets.symmetric(vertical: 16),
@@ -97,8 +126,7 @@ class _RegisterState extends State<Register> {
                   const Text('Already have an account?'),
                   TextButton(
                     onPressed: () {
-                      // Navigate to Login page
-                      Navigator.pop(context); // Go back to Login screen
+                      Navigator.pop(context); // กลับไปที่หน้าล็อกอิน
                     },
                     child: const Text(
                       'Sign in',
