@@ -13,7 +13,7 @@ import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 // import 'package:pro_mobile/views/student/student_history_page.dart';
 // import 'package:pro_mobile/views/approver/approve_request_page.dart';
 // import 'package:pro_mobile/widgets/NavigationBar_student.dart';
-// // import 'package:pro_mobile/widgets/browse.dart';
+// import 'package:pro_mobile/widgets/browse.dart';
 // import 'package:pro_mobile/views/profile.dart';
 // import 'package:pro_mobile/widgets/NavigationBar_staff.dart';
 // import 'package:pro_mobile/widgets/NavigationBar_approver.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Room Management App',
+      title: 'Room Reservation App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

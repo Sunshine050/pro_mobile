@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/components/message_dialog.dart';
 import 'package:pro_mobile/components/tabsBar.dart';
+import 'package:pro_mobile/views/browse.dart';
 import 'package:pro_mobile/views/staff/staff_history_page.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 import 'package:pro_mobile/components/room_card.dart';
@@ -243,6 +245,28 @@ class _ManageRoomsPageState extends State<ManageRooms> {
           ElevatedButton(
             onPressed: () {
               // ฟังก์ชันยืนยัน
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return MessageDialog(
+                    content: 'Confirmed',
+                    onConfirm: () {
+                      // change to status page
+                      Navigator.pushReplacement<void, void>(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) => Browse(
+                            role: "staff",
+                          ),
+                        ),
+                      );
+                    },
+                    // no cancel button
+                    onCancel: null,
+                    messageType: 'ok',
+                  );
+                },
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromRGBO(16, 80, 176, 1.0),
@@ -294,7 +318,7 @@ class _ManageRoomsPageState extends State<ManageRooms> {
                   _roomNameController.text =
                       _editController.text; // Update room name
                 });
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.pop(context);
               },
               child: const Text("Confirm"),
             ),
