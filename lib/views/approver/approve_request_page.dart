@@ -97,25 +97,26 @@ class _ApproveRequestPageState extends State<ApproveRequestPage> {
           ],
         ),
         body: reservations.isEmpty
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.edit_note,
-                      size: 100,
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Spacer(),
+                  Icon(
+                    Icons.edit_note,
+                    size: 100,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'No reservations awaiting approval.',
+                    style: TextStyle(
+                      fontSize: 18,
                       color: Colors.grey,
                     ),
-                    SizedBox(height: 16),
-                    Text(
-                      'No reservations awaiting approval.',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  Spacer(),
+                  TabsbarNavigator(role: "approver")
+                ],
               )
             : Column(
                 children: [
