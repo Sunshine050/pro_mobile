@@ -72,7 +72,7 @@ const createRoom = (req, res) => {
 const updateRoom = (req, res) => {
   const { roomId } = req.params;
   let roomData;
-  if (!req.file) {
+  if (!req.file) { // if no file don't update image
     roomData = { ...req.body }
   } else {
     roomData = {
