@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/components/message_dialog.dart';
+import 'package:pro_mobile/components/tabsBar.dart';
+import 'package:pro_mobile/views/browse.dart';
 import 'package:pro_mobile/views/staff/staff_history_page.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 import 'package:pro_mobile/components/room_card.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ManageRooms extends StatefulWidget {
-  const ManageRooms({super.key, required String roomId});
+  final bool isAdd;
+  final String roomId;
+  const ManageRooms({super.key, required this.roomId, required this.isAdd});
 
   @override
   State<ManageRooms> createState() => _ManageRoomsPageState();

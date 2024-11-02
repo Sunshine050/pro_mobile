@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/views/approver/approve_request_page.dart';
+import 'package:pro_mobile/views/approver/approver_dashboard.dart';
 import 'package:pro_mobile/views/approver/approver_history_page.dart';
 import 'package:pro_mobile/views/browse.dart';
 import 'package:pro_mobile/widgets/profile.dart';
@@ -93,7 +94,7 @@ class _TabsbarNavigatorState extends State<TabsbarNavigator> {
                       ApproveRequestPage()),
                   tabBuilder("History", Icons.history, HistoryLec()),
                   tabBuilder("Dashboard", Icons.insert_chart_outlined_outlined,
-                      DashboardStaff()),
+                      DashboardLec()),
                   tabBuilder(
                       "Profile",
                       Icons.person,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/views/auth/register_page.dart';
-import 'package:pro_mobile/widgets/browse.dart';
+import 'package:pro_mobile/views/browse.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});

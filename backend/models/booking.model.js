@@ -11,7 +11,7 @@ const Booking = {
       callback(null, results.insertId);
     });
   },
-  
+
   findByUserId: (userId, callback) => {
     db.query('SELECT * FROM bookings WHERE user_id = ?', [userId], (err, results) => {
       if (err) {
@@ -90,6 +90,7 @@ const Booking = {
     });
   },
 
+  // get all pending req for approver
   getAllRequests: (callback) => {
     db.query('SELECT * FROM bookings WHERE status = "pending"', (err, results) => {
       if (err) {
@@ -112,7 +113,8 @@ const Booking = {
       }
       return callback(null, results[0]);
     });
-  }
+  },
+
 };
 
 module.exports = Booking;

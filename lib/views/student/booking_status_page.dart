@@ -15,15 +15,14 @@ class _BookingStatusPageState extends State<BookingStatus> {
       appBar: AppBar(),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
               child: status == 'blank'
                   ? _buildBlankStatus()
                   : _buildPendingContent(),
             ),
           ),
-          Spacer(),
           TabsbarNavigator(role: "student")
         ],
       ),

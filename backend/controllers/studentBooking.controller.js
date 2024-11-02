@@ -57,3 +57,60 @@ exports.getBookings = (req, res) => {
     res.status(200).json(bookings);
   });
 };
+
+const getBookmarked = (req, res) => {
+  const { user_id } = req.body;
+
+  Room.getBookmarked(user_id, (err, result) => {
+    if (err) return res.status(500).send('Internal server error');
+    res.json(result);
+  });
+}
+
+const bookmark = (req, res) => {
+  // isBookmarked = true => unMarked
+  // isBookmarked = false => Marked
+  const { user_id, room_id, isBookmarked } = req.body;
+
+  Room.bookmark(user_id, room_id, isBookmarked, (err, result) => {
+    if (err) return res.status(500).send('Internal server error');
+    res.send("success");
+  });
+}
+
+const history = (req, res) => {
+  const { user_id, role } = req.body;
+  try {
+    Booking.getAllBooking(user_id, role, (err, result) => {
+      if (err) return res.status(500).send('Internal server error');
+      res.json(result);
+    });
+  } catch (error) {
+    res.status(500).send('Internal server error');
+  }
+
+}
+
+const cancel = (req, res) => {
+  const { user_id, room_id, slot } = req.body;
+
+  try {
+    Booking.cancelRequest(user_id, room_id, slot, (err, result) => {
+      console.log(err);
+      if (err) return res.status(500).send('Internal server error');
+      res.json(result);
+    });
+  } catch (error) {
+    res.status(500).send('Internal server error');
+  }
+
+}
+
+module.exports = {
+  bookRoom,
+  cancel,
+  getBookings,
+  getBookmarked,
+  bookmark,
+  history
+}

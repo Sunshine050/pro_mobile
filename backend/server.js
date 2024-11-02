@@ -13,6 +13,7 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
 // ตั้งค่า Routes
+app.use('/room', roomRoutes);
 app.use('/student', studentRoutes);
 app.use('/staff', staffRoutes);
 app.use('/approver', approverRoutes);
