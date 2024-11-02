@@ -11,7 +11,7 @@ router.post('/book', verifyToken, studentController.bookRoom);
 // cancel request
 router.post('/cancel', verifyToken, studentController.cancel);
 // Route สำหรับดึงการจองของผู้ใช้
-router.post('/bookings', verifyToken, studentController.getBookings);
+router.get('/bookings/:user_id', verifyToken, studentController.getBookings);
 
 // bookmark a room
 router.post('/bookmark', verifyToken, studentController.bookmark);
@@ -19,6 +19,6 @@ router.post('/bookmark', verifyToken, studentController.bookmark);
 router.post('/bookmarked', verifyToken, studentController.getBookmarked);
 
 // get history
-router.post('/history', verifyToken, studentController.history)
+// router.post('/history', verifyToken, studentController.history) // move to user
 
 module.exports = router;

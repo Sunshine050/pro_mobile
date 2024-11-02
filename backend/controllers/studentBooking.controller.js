@@ -3,7 +3,7 @@ const Room = require('../models/room.model');
 
 // ฟังก์ชันสำหรับดึงข้อมูลห้องทั้งหมด
 const getAllRooms = (req, res) => {
-  Room.getAllRooms((err, rooms) => { 
+  Room.getAllRooms((err, rooms) => {
     if (err) {
       console.error("Error fetching rooms:", err);
       return res.status(500).send('Error fetching rooms');
@@ -14,26 +14,32 @@ const getAllRooms = (req, res) => {
 
 // ฟังก์ชันสำหรับการจองห้อง
 const bookRoom = (req, res) => {
-  const { user_id, room_id, slot, booking_date } = req.body;
+  const { user_id, room_id, slot, reason } = req.body;
 
-  if (!user_id || !room_id || !slot || !booking_date) {
+  if (!user_id || !room_id || !slot || !reason) {
     return res.status(400).send('Missing required fields');
   }
 
-  Room.updateSlotStatus(room_id, slot, 'pending', (err) => {
+  Room.isSlotFree(room_id, slot, (err, result) => {
     if (err) {
       console.error("Error updating room slot status:", err);
-      return res.status(500).send('Error updating room slot status');
+      return res.status(500).send('Error this slot unvailable');
     }
-
-    Booking.create({ user_id, room_id, slot, status: 'pending', booking_date }, (err, result) => {
+    Room.updateSlotStatus(room_id, slot, 'pending', (err) => {
       if (err) {
-        console.error("Error creating booking:", err);
-        return res.status(500).send('Error creating booking');
+        console.error("Error updating room slot status:", err);
+        return res.status(500).send('Error updating room slot status');
       }
-      res.status(201).send('Booking created successfully');
+
+      Booking.create({ user_id, room_id, slot, status: 'pending', reason }, (err, result) => {
+        if (err) {
+          console.error("Error creating booking:", err);
+          return res.status(500).send('Error creating booking');
+        }
+        res.status(201).send('Booking created successfully');
+      });
     });
-  });
+  })
 };
 
 // ฟังก์ชันสำหรับดึงข้อมูลการจองสำหรับผู้ใช้เฉพาะ
@@ -44,7 +50,7 @@ const getBookings = (req, res) => {
     return res.status(400).send('User ID is required');
   }
 
-  Booking.findByUserId(user_id, (err, bookings) => {
+  Booking.getPending(user_id, (err, bookings) => {
     if (err) {
       console.error("Error fetching bookings:", err);
       return res.status(500).send('Error fetching bookings');
@@ -71,18 +77,6 @@ const bookmark = (req, res) => {
   });
 }
 
-const history = (req, res) => {
-  const { user_id, role } = req.body;
-  try {
-    Booking.getAllBooking(user_id, role, (err, result) => {
-      if (err) return res.status(500).send('Internal server error');
-      res.json(result);
-    });
-  } catch (error) {
-    res.status(500).send('Internal server error');
-  }
-}
-
 const cancel = (req, res) => {
   const { user_id, room_id, slot } = req.body;
 
@@ -103,6 +97,5 @@ module.exports = {
   cancel,
   getBookings,
   getBookmarked,
-  bookmark,
-  history
+  bookmark
 };

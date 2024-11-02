@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const userRoutes = require('./routes/user.route');
 const studentRoutes = require('./routes/studentBooking.routes');
 const staffRoutes = require('./routes/staffRoom.routes');
 const approverRoutes = require('./routes/approverBooking.routes');
@@ -15,6 +16,7 @@ app.use('/assets', express.static('assets'));
 
 // ตั้งค่า Routes
 app.use('/room', roomRoutes);
+app.use('/user', userRoutes);
 app.use('/student', studentRoutes);
 app.use('/staff', staffRoutes);
 app.use('/approver', approverRoutes);
