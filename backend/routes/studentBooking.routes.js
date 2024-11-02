@@ -19,6 +19,6 @@ router.post('/bookmark', verifyToken, studentController.bookmark);
 router.post('/bookmarked', verifyToken, studentController.getBookmarked);
 
 // get history
-router.post('/history', verifyToken, studentController.history)
+// router.post('/history', verifyToken, studentController.history) // move to user
 
 module.exports = router;

@@ -15,7 +15,8 @@ router.post('/approve', verifyToken, approverController.approveBooking);
 
 // Route สำหรับปฏิเสธการจอง
 router.post('/reject', verifyToken, approverController.rejectBooking);
-router.post('/history', verifyToken, approverController.history);
-router.get('/dashboard', verifyToken, approverController.summary);
+
+// router.post('/history', verifyToken, approverController.history); // move to user
+// router.get('/dashboard', verifyToken, approverController.summary);
 
 module.exports = router;

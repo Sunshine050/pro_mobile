@@ -1,5 +1,4 @@
 const Room = require('../models/room.model');
-const db = require('../config/db.config');
 
 // ฟังก์ชันดึงข้อมูลห้องทั้งหมด
 const getAllRooms = (req, res) => {

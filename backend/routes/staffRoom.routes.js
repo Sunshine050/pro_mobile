@@ -10,7 +10,8 @@ router.post('/room/create', verifyToken, staffController.upload.single('image'),
 router.put('/room/update/:roomId', verifyToken, staffController.upload.single('image'), staffController.updateRoom); // อัปเดตข้อมูลห้อง
 // router.delete('/room/delete/:roomId', verifyToken, staffController.deleteRoom); // ลบห้อง
 // router.post('/room/requestBooking', verifyToken, staffController.requestBooking); // จองห้อง
-router.post('/history', verifyToken, staffController.history);
-router.get('/dashboard', verifyToken, staffController.summary);
+
+// router.post('/history', verifyToken, staffController.history); // move to user
+// router.get('/dashboard', verifyToken, staffController.summary); // move to user
 
 module.exports = router; // ส่งออก router

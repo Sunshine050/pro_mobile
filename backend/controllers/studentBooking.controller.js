@@ -1,17 +1,6 @@
 const Booking = require('../models/booking.model');
 const Room = require('../models/room.model');
 
-// ฟังก์ชันสำหรับดึงข้อมูลห้องทั้งหมด
-const getAllRooms = (req, res) => {
-  Room.getAllRooms((err, rooms) => { 
-    if (err) {
-      console.error("Error fetching rooms:", err);
-      return res.status(500).send('Error fetching rooms');
-    }
-    res.status(200).json(rooms);
-  });
-};
-
 const bookRoom = (req, res) => {
   const { user_id, room_id, slot, reason } = req.body;
 
@@ -36,7 +25,7 @@ const bookRoom = (req, res) => {
         return res.status(500).send('Error updating room slot status');
       }
 
-      Booking.create({ user_id, room_id, slot, status: 'pending', reason }, (err) => {
+      Booking.create({ user_id, room_id, slot, status: 'pending', reason }, (err, result) => {
         if (err) {
           console.error("Error creating booking:", err);
           return res.status(500).send('Error creating booking');
@@ -44,7 +33,7 @@ const bookRoom = (req, res) => {
         res.status(201).send('Booking created successfully');
       });
     });
-  });
+  })
 };
 
 const getBookings = (req, res) => {
@@ -55,7 +44,7 @@ const getBookings = (req, res) => {
     return res.status(400).send('User ID is required');
   }
 
-  Booking.findByUserId(user_id, (err, bookings) => {
+  Booking.getPending(user_id, (err, bookings) => {
     if (err) {
       console.error("Error fetching bookings:", err);
       return res.status(500).send('Error fetching bookings');
@@ -88,18 +77,6 @@ const bookmark = (req, res) => {
   });
 }
 
-const history = (req, res) => {
-  const { user_id, role } = req.body;
-
-  Booking.getAllBooking(user_id, role, (err, result) => {
-    if (err) {
-      console.error("Error fetching booking history:", err);
-      return res.status(500).send('Internal server error');
-    }
-    res.json(result);
-  });
-}
-
 const cancel = (req, res) => {
   const { user_id, room_id, slot } = req.body;
 
@@ -114,11 +91,9 @@ const cancel = (req, res) => {
 
 // Export functions
 module.exports = {
-  getAllRooms,
   bookRoom,
   cancel,
   getBookings,
   getBookmarked,
-  bookmark,
-  history
+  bookmark
 };

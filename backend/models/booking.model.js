@@ -22,6 +22,10 @@ const Booking = {
     });
   },
 
+  getPending: (userId, callback) => {
+    db.query('select * from bookings where user_id = ? and status = "pending"', [userId], callback);
+  },
+
   approveBooking: (bookingId, approverId, callback) => {
     this.updateStatus(bookingId, 'approved', approverId, callback);
   },
@@ -114,9 +118,26 @@ const Booking = {
     });
   },
 
+  cancelRequest: (bookingId, callback) => {
+    db.query("UPDATE `bookings` SET `status` = 'cancel' WHERE `bookings`.`id` = ? ", [bookingId], callback);
+  },
 
-  //History//
-  
-}
-  // Export the Booking object
+  getAllBooking: (userId, role, callback) => {
+    let query;
+    switch (role) {
+      case "student":
+        query = "SELECT b.id AS booking_id, u2.username AS approved_by, r.room_name, b.slot, b.status, b.reason, b.booking_date FROM bookings b INNER JOIN users u1 ON b.user_id = u1.id LEFT JOIN users u2 ON b.approved_by = u2.id INNER JOIN rooms r ON b.room_id = r.id WHERE b.user_id = ?";
+        break;
+      case "staff":
+        query = "SELECT b.id AS booking_id, u1.username AS booked_by, u2.username AS approved_by, r.room_name, b.slot, b.status, b.reason, b.booking_date FROM bookings b INNER JOIN users u1 ON b.user_id = u1.id LEFT JOIN users u2 ON b.approved_by = u2.id INNER JOIN rooms r ON b.room_id = r.id";
+        break;
+      case "approver":
+        query = "SELECT b.id AS booking_id, u1.username AS booked_by, r.room_name, b.slot, b.status, b.reason, b.booking_date FROM bookings b INNER JOIN users u1 ON b.user_id = u1.id LEFT JOIN users u2 ON b.approved_by = u2.id INNER JOIN rooms r ON b.room_id = r.id WHERE b.approved_by = ?";
+        break;
+    }
+
+    db.query(query, [userId], callback);
+  },
+};
+
 module.exports = Booking;
