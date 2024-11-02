@@ -5,12 +5,13 @@ class AuthService {
 
   String validateEmail(String email) {
     if (!email.contains('@')) {
-      email += '@gmail.com';  
+      email += '@lamduan.mfu.ac.th';
     }
     return email;
   }
 
-  Future<dynamic> register(String username, String email, String password) async {
+  Future<dynamic> register(
+      String username, String email, String password) async {
     final validatedEmail = validateEmail(email);
     return await apiService.postRequest('/api/auth/register', {
       'username': username,
@@ -27,6 +28,7 @@ class AuthService {
   }
 
   Future<dynamic> getAllUsers(String token) async {
-    return await apiService.getRequest('/api/auth/users', headers: {'Authorization': 'Bearer $token'});
+    return await apiService.getRequest('/api/auth/users',
+        headers: {'Authorization': 'Bearer $token'});
   }
 }

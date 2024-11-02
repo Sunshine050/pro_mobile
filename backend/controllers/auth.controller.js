@@ -4,7 +4,7 @@ const User = require('../models/user.model');
 
 // Register
 exports.register = async (req, res) => {
-    const { username, password, email } = req.body;
+    const { username, password, email,confirm_password } = req.body;
 
     // ตรวจสอบประเภทผู้ใช้จากอีเมล
     let role = null;
@@ -26,6 +26,7 @@ exports.register = async (req, res) => {
         username,
         password: hashedPassword,
         email,
+        confirm_password,
         role
     };
 
@@ -64,6 +65,8 @@ exports.login = async (req, res) => {
 
     // ส่ง token และ userId กลับไปใน response
     return res.status(200).json({ token, userId: user._id });
+    // ส่ง message, token, และ userId กลับไปใน response
+    // return res.status(200).json({ message: 'Login successfully', token, userId: user._id });
 };
 
 

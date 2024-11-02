@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pro_mobile/views/approver/approve_request_page.dart';
 import 'package:pro_mobile/views/approver/approver_history_page.dart';
 import 'package:pro_mobile/views/browse.dart';
-import 'package:pro_mobile/views/profile.dart';
+import 'package:pro_mobile/widgets/profile.dart';
 import 'package:pro_mobile/views/staff/staff_dashboard.dart';
 import 'package:pro_mobile/views/staff/staff_history_page.dart';
 import 'package:pro_mobile/views/student/booking_status_page.dart';
