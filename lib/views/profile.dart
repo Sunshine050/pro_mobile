@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/message_dialog.dart';
 import 'package:pro_mobile/components/room_card_sm.dart';
 import 'package:pro_mobile/components/tabsBar.dart';
-import 'package:pro_mobile/views/homepage.dart';
+import 'package:pro_mobile/widgets/homepage.dart';
 
 class Profile extends StatefulWidget {
   final String userId, role;

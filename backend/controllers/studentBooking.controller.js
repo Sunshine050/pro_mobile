@@ -1,34 +1,55 @@
 const Booking = require('../models/booking.model');
 const Room = require('../models/room.model');
 
-const bookRoom = (req, res) => {
-  const { user_id, room_id, slot } = req.body;
-
-  // is slot free
-  Room.isSlotFree(room_id, slot, (err, result) => {
-    // if free => continue
-    if (result) {
-      Room.updateSlotStatus(room_id, slot, 'pending', (err) => {
-        if (err) return res.status(500).send('Error updating room slot status');
-
-        Booking.create({ user_id, room_id, slot, status: 'pending' }, (err, result) => {
-          if (err) return res.status(500).send('Error creating booking');
-          res.send('Booking created successfully');
-        });
-      });
-    } else {
-      res.status(500).send('This slot is Unavailable');
+// ฟังก์ชันสำหรับดึงข้อมูลห้องทั้งหมด
+const getAllRooms = (req, res) => {
+  Room.getAllRooms((err, rooms) => { 
+    if (err) {
+      console.error("Error fetching rooms:", err);
+      return res.status(500).send('Error fetching rooms');
     }
+    res.status(200).json(rooms);
   });
 };
 
-// get pending booking
-const getBookings = (req, res) => {
-  const { user_id } = req.body;
+// ฟังก์ชันสำหรับการจองห้อง
+const bookRoom = (req, res) => {
+  const { user_id, room_id, slot, booking_date } = req.body;
 
-  Booking.getPending(user_id, (err, bookings) => {
-    if (err) return res.status(500).send('Error fetching bookings');
-    res.json(bookings);
+  if (!user_id || !room_id || !slot || !booking_date) {
+    return res.status(400).send('Missing required fields');
+  }
+
+  Room.updateSlotStatus(room_id, slot, 'pending', (err) => {
+    if (err) {
+      console.error("Error updating room slot status:", err);
+      return res.status(500).send('Error updating room slot status');
+    }
+
+    Booking.create({ user_id, room_id, slot, status: 'pending', booking_date }, (err, result) => {
+      if (err) {
+        console.error("Error creating booking:", err);
+        return res.status(500).send('Error creating booking');
+      }
+      res.status(201).send('Booking created successfully');
+    });
+  });
+};
+
+// ฟังก์ชันสำหรับดึงข้อมูลการจองสำหรับผู้ใช้เฉพาะ
+const getBookings = (req, res) => {
+  const { user_id } = req.params;
+
+  if (!user_id) {
+    return res.status(400).send('User ID is required');
+  }
+
+  Booking.findByUserId(user_id, (err, bookings) => {
+    if (err) {
+      console.error("Error fetching bookings:", err);
+      return res.status(500).send('Error fetching bookings');
+    }
+    res.status(200).json(bookings);
   });
 };
 
@@ -42,8 +63,6 @@ const getBookmarked = (req, res) => {
 }
 
 const bookmark = (req, res) => {
-  // isBookmarked = true => unMarked
-  // isBookmarked = false => Marked
   const { user_id, room_id, isBookmarked } = req.body;
 
   Room.bookmark(user_id, room_id, isBookmarked, (err, result) => {
@@ -62,7 +81,6 @@ const history = (req, res) => {
   } catch (error) {
     res.status(500).send('Internal server error');
   }
-
 }
 
 const cancel = (req, res) => {
@@ -70,21 +88,21 @@ const cancel = (req, res) => {
 
   try {
     Booking.cancelRequest(user_id, room_id, slot, (err, result) => {
-      console.log(err);
       if (err) return res.status(500).send('Internal server error');
       res.json(result);
     });
   } catch (error) {
     res.status(500).send('Internal server error');
   }
-
 }
 
+// Export functions
 module.exports = {
+  getAllRooms,
   bookRoom,
   cancel,
   getBookings,
   getBookmarked,
   bookmark,
   history
-}
+};

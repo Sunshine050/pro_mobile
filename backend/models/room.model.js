@@ -1,5 +1,4 @@
-const db = require('../config/db.config');
-
+const db = require = require('../config/db.config');
 const Room = {
     findAll: (callback) => {
         db.query('SELECT * FROM rooms', callback);

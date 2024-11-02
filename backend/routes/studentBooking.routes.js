@@ -3,6 +3,9 @@ const router = express.Router();
 const studentController = require('../controllers/studentBooking.controller');
 const { verifyToken } = require('../middleware/auth.middleware');
 
+// Route สำหรับดึงข้อมูลห้องทั้งหมด
+router.get('/rooms', studentController.getAllRooms);
+
 // Route สำหรับจองห้อง
 router.post('/book', verifyToken, studentController.bookRoom);
 // cancel request

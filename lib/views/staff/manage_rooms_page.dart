@@ -17,111 +17,18 @@ class ManageRooms extends StatefulWidget {
 }
 
 class _ManageRoomsPageState extends State<ManageRooms> {
-  late bool slot1Available, slot2Available, slot3Available, slot4Available;
-  String roomImg = "blank.png";
+  bool slot1Available = true;
+  bool slot2Available = false;
+  bool slot3Available = true;
+  bool slot4Available = false;
 
-  final TextEditingController _roomNameController = TextEditingController();
-
-  Map<int, Map<String, dynamic>> roomsSample = {
-    1: {
-      "role": 'student',
-      "roomId": '1',
-      "roomName": 'room_name',
-      "desc":
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
-      "img": 'room_1.jpg',
-      "slot_1": "free",
-      "slot_2": "free",
-      "slot_3": "free",
-      "slot_4": "free",
-    },
-    2: {
-      "role": 'student',
-      "roomId": '2',
-      "roomName": 'room_name',
-      "desc":
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
-      "img": 'room_1.jpg',
-      "slot_1": "reserved",
-      "slot_2": "reserved",
-      "slot_3": "reserved",
-      "slot_4": "reserved",
-    },
-    3: {
-      "role": 'student',
-      "roomId": '3',
-      "roomName": 'room_name',
-      "desc":
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
-      "img": 'room_1.jpg',
-      "slot_1": "disable",
-      "slot_2": "disable",
-      "slot_3": "disable",
-      "slot_4": "disable",
-    },
-    4: {
-      "role": 'student',
-      "roomId": '4',
-      "roomName": 'room_name',
-      "desc":
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
-      "img": 'room_1.jpg',
-      "slot_1": "free",
-      "slot_2": "pending",
-      "slot_3": "reserved",
-      "slot_4": "disable",
-    },
-    5: {
-      "role": 'student',
-      "roomId": '5',
-      "roomName": 'room_name',
-      "desc":
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non purus a erat tempor pretium varius quis dolor. Lorem ipsum. ',
-      "img": 'room_1.jpg',
-      "slot_1": "free",
-      "slot_2": "free",
-      "slot_3": "free",
-      "slot_4": "free",
-    },
-  };
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    if (!widget.isAdd) {
-      _roomNameController.text =
-          roomsSample[int.parse(widget.roomId)]?["roomName"];
-      slot1Available =
-          (roomsSample[int.parse(widget.roomId)]?["slot_1"] == "free")
-              ? true
-              : false;
-      slot2Available =
-          (roomsSample[int.parse(widget.roomId)]?["slot_2"] == "free")
-              ? true
-              : false;
-      slot3Available =
-          (roomsSample[int.parse(widget.roomId)]?["slot_3"] == "free")
-              ? true
-              : false;
-      slot4Available =
-          (roomsSample[int.parse(widget.roomId)]?["slot_4"] == "free")
-              ? true
-              : false;
-      roomImg = roomsSample[int.parse(widget.roomId)]?["img"];
-    } else {
-      slot1Available = true;
-      slot2Available = true;
-      slot3Available = true;
-      slot4Available = true;
-    }
-  }
+  // Controller for room name
+  final TextEditingController _roomNameController =
+      TextEditingController(text: "[room_name]");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -129,7 +36,7 @@ class _ManageRoomsPageState extends State<ManageRooms> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // เพิ่มการย้อนกลับเมื่อกดปุ่ม
+            Navigator.pop(context); // Navigate back
           },
         ),
         title: Row(
@@ -141,7 +48,7 @@ class _ManageRoomsPageState extends State<ManageRooms> {
                 controller: _roomNameController,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'Enter room name',
+                  hintText: 'Room Name',
                 ),
                 style: const TextStyle(color: Colors.black, fontSize: 20),
               ),
@@ -158,69 +65,63 @@ class _ManageRoomsPageState extends State<ManageRooms> {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          // Room Image with Edit Icon
-          Stack(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Container(
-                  clipBehavior: Clip.antiAlias,
-                  height: 250,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // Room Image with Edit Icon
+            Stack(
+              children: [
+                Container(
+                  height: 150,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
                     child: Image.asset(
-                      'assets/rooms/${roomImg}', // เส้นทางไปยังรูปภาพ
+                      'assets/rooms/room_1.jpg', // Path to image
                       fit: BoxFit.cover,
                       width: double.infinity,
-                      height: 250,
+                      height: 150,
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 24,
-                right: 24,
-                child: CircleAvatar(
-                  radius: 20,
-                  backgroundColor: Colors.blue,
-                  child: IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.white),
-                    onPressed: () {
-                      // ฟังก์ชันเลือกภาพ
-                    },
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.blue,
+                    child: IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.white),
+                      onPressed: () {
+                        // Function to choose image
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          // const SizedBox(height: 20),
+              ],
+            ),
+            const SizedBox(height: 20),
 
-          // Time Slots with Disable/Open Toggle
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Expanded(
-              child: Column(
+            // Time Slots with Disable/Open Toggle
+            Expanded(
+              child: ListView(
                 children: [
                   timeSlotWidget("08:00 - 10:00", slot1Available, Colors.blue),
-                  timeSlotWidget("10:00 - 12:00", slot2Available, Colors.blue),
-                  timeSlotWidget("13:00 - 15:00", slot3Available, Colors.blue),
-                  timeSlotWidget("15:00 - 17:00", slot4Available, Colors.blue),
+                  timeSlotWidget("10:00 - 12:00", slot2Available, Colors.red),
+                  timeSlotWidget(
+                      "13:00 - 15:00", slot3Available, Colors.yellow),
+                  timeSlotWidget("15:00 - 17:00", slot4Available, Colors.grey),
                 ],
               ),
             ),
-          ),
-          const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
-          // Room Description Field
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: TextFormField(
+            // Room Description Field
+            TextFormField(
               decoration: InputDecoration(
                 labelText: "Room Description",
                 hintText: "[room_desc]",
@@ -238,55 +139,28 @@ class _ManageRoomsPageState extends State<ManageRooms> {
                 return null;
               },
             ),
-          ),
-          const SizedBox(height: 24),
+            const SizedBox(height: 20),
 
-          // Confirm Button
-          ElevatedButton(
-            onPressed: () {
-              // ฟังก์ชันยืนยัน
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return MessageDialog(
-                    content: 'Confirmed',
-                    onConfirm: () {
-                      // change to status page
-                      Navigator.pushReplacement<void, void>(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) => Browse(
-                            role: "staff",
-                          ),
-                        ),
-                      );
-                    },
-                    // no cancel button
-                    onCancel: null,
-                    messageType: 'ok',
-                  );
-                },
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromRGBO(16, 80, 176, 1.0),
-              padding: const EdgeInsets.symmetric(
-                  vertical: 10, horizontal: 20), // ปรับขนาดให้เล็กลง
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+            // Confirm Button
+            ElevatedButton(
+              onPressed: () {
+                // Function to confirm
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueAccent,
+                padding: const EdgeInsets.symmetric(
+                    vertical: 10, horizontal: 20), // Adjust size
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                shadowColor: Colors.blueAccent.withOpacity(0.5),
+                elevation: 20,
               ),
-              shadowColor: Colors.blueAccent.withOpacity(0.5),
-              elevation: 20,
+              child: const Text("Confirm",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
-            child: const Text("Confirm",
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white)),
-          ),
-          Spacer(),
-          TabsbarNavigator(role: "staff")
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -318,7 +192,7 @@ class _ManageRoomsPageState extends State<ManageRooms> {
                   _roomNameController.text =
                       _editController.text; // Update room name
                 });
-                Navigator.pop(context);
+                Navigator.of(context).pop(); // Close the dialog
               },
               child: const Text("Confirm"),
             ),
@@ -333,7 +207,7 @@ class _ManageRoomsPageState extends State<ManageRooms> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Time slot button with solid background and shadow
           Container(
