@@ -94,7 +94,6 @@ const Booking = {
     });
   },
 
-  // get all pending req for approver
   getAllRequests: (callback) => {
     db.query('SELECT * FROM bookings WHERE status = "pending"', (err, results) => {
       if (err) {
