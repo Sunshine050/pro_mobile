@@ -9,7 +9,7 @@ EventEmitter.defaultMaxListeners = 20; // ปรับตามต้องก�
 // ตั้งค่า multer สำหรับการจัดเก็บไฟล์
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // เก็บไฟล์ที่โฟลเดอร์ uploads
+    cb(null, 'assets/rooms/'); // เก็บไฟล์ที่โฟลเดอร์ uploads
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname); // ตั้งชื่อไฟล์ให้ไม่ซ้ำ
@@ -55,7 +55,7 @@ const createRoom = (req, res) => {
   // สร้างข้อมูลห้องพร้อมกับ image_url ที่อัปโหลด
   const roomData = {
     ...req.body,
-    image_url: `/uploads/${req.file.filename}`, // เก็บ URL ของรูปภาพ
+    image: `${req.file.filename}`, // เก็บ URL ของรูปภาพ
   };
 
   Room.create(roomData, (err, result) => {
@@ -71,7 +71,18 @@ const createRoom = (req, res) => {
 // ฟังก์ชันสำหรับการอัปเดตข้อมูลห้อง
 const updateRoom = (req, res) => {
   const { roomId } = req.params;
-  Room.update(roomId, req.body, (err) => {
+  let roomData;
+  if (!req.file) {
+    roomData = { ...req.body }
+  } else {
+    roomData = {
+      ...req.body,
+      image: `${req.file.filename}`,
+    }
+  }
+
+  console.log(req.body);
+  Room.update(roomId, roomData, (err) => {
     if (err) return res.status(500).send('Error updating room');
     res.send('Room updated successfully');
   });

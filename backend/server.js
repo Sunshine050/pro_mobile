@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // เส้นทางแสดงรูปภาพที่อัปโหลด
-app.use('/uploads', express.static('uploads'));
+app.use('/assets', express.static('assets'));
 
 // ตั้งค่า Routes
 app.use('/room', roomRoutes);
