@@ -71,7 +71,18 @@ const createRoom = (req, res) => {
 // ฟังก์ชันสำหรับการอัปเดตข้อมูลห้อง
 const updateRoom = (req, res) => {
   const { roomId } = req.params;
-  Room.update(roomId, req.body, (err) => {
+  let roomData;
+  if (!req.file) {
+    roomData = { ...req.body }
+  } else {
+    roomData = {
+      ...req.body,
+      image: `${req.file.filename}`,
+    }
+  }
+
+  console.log(req.body);
+  Room.update(roomId, roomData, (err) => {
     if (err) return res.status(500).send('Error updating room');
     res.send('Room updated successfully');
   });
