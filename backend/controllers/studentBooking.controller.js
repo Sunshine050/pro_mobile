@@ -1,30 +1,24 @@
 const Booking = require('../models/booking.model');
 const Room = require('../models/room.model');
 
-// ฟังก์ชันสำหรับดึงข้อมูลห้องทั้งหมด
-const getAllRooms = (req, res) => {
-  Room.getAllRooms((err, rooms) => {
-    if (err) {
-      console.error("Error fetching rooms:", err);
-      return res.status(500).send('Error fetching rooms');
-    }
-    res.status(200).json(rooms);
-  });
-};
-
-// ฟังก์ชันสำหรับการจองห้อง
 const bookRoom = (req, res) => {
   const { user_id, room_id, slot, reason } = req.body;
 
+  // ตรวจสอบค่าที่จำเป็น
   if (!user_id || !room_id || !slot || !reason) {
     return res.status(400).send('Missing required fields');
   }
 
-  Room.isSlotFree(room_id, slot, (err, result) => {
+  Room.isSlotFree(room_id, slot, (err, isFree) => {
     if (err) {
-      console.error("Error updating room slot status:", err);
-      return res.status(500).send('Error this slot unvailable');
+      console.error("Error checking slot availability:", err);
+      return res.status(500).send('Error checking slot availability');
     }
+
+    if (!isFree) {
+      return res.status(400).send('This slot is unavailable');
+    }
+
     Room.updateSlotStatus(room_id, slot, 'pending', (err) => {
       if (err) {
         console.error("Error updating room slot status:", err);
@@ -42,10 +36,10 @@ const bookRoom = (req, res) => {
   })
 };
 
-// ฟังก์ชันสำหรับดึงข้อมูลการจองสำหรับผู้ใช้เฉพาะ
 const getBookings = (req, res) => {
   const { user_id } = req.params;
 
+  // ตรวจสอบว่า user_id ถูกส่งมาหรือไม่
   if (!user_id) {
     return res.status(400).send('User ID is required');
   }
@@ -63,7 +57,10 @@ const getBookmarked = (req, res) => {
   const { user_id } = req.body;
 
   Room.getBookmarked(user_id, (err, result) => {
-    if (err) return res.status(500).send('Internal server error');
+    if (err) {
+      console.error("Error fetching bookmarked rooms:", err);
+      return res.status(500).send('Internal server error');
+    }
     res.json(result);
   });
 }
@@ -71,28 +68,29 @@ const getBookmarked = (req, res) => {
 const bookmark = (req, res) => {
   const { user_id, room_id, isBookmarked } = req.body;
 
-  Room.bookmark(user_id, room_id, isBookmarked, (err, result) => {
-    if (err) return res.status(500).send('Internal server error');
-    res.send("success");
+  Room.bookmark(user_id, room_id, isBookmarked, (err) => {
+    if (err) {
+      console.error("Error updating bookmark:", err);
+      return res.status(500).send('Internal server error');
+    }
+    res.send("Bookmark updated successfully");
   });
 }
 
 const cancel = (req, res) => {
   const { user_id, room_id, slot } = req.body;
 
-  try {
-    Booking.cancelRequest(user_id, room_id, slot, (err, result) => {
-      if (err) return res.status(500).send('Internal server error');
-      res.json(result);
-    });
-  } catch (error) {
-    res.status(500).send('Internal server error');
-  }
+  Booking.cancelRequest(user_id, room_id, slot, (err, result) => {
+    if (err) {
+      console.error("Error canceling booking:", err);
+      return res.status(500).send('Internal server error');
+    }
+    res.json(result);
+  });
 }
 
 // Export functions
 module.exports = {
-  getAllRooms,
   bookRoom,
   cancel,
   getBookings,
