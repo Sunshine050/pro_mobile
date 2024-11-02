@@ -43,10 +43,28 @@ const rejectBooking = (req, res) => {
   });
 };
 
+const history = (req, res) => {
+  const { user_id, role } = req.body;
+
+  Booking.getAllBooking(user_id, role, (err, result) => {
+    if (err) return res.status(500).send('Internal server error');
+    res.json(result);
+  });
+}
+
+const summary = (req, res) => {
+  Room.getSlotSummary((err, result) => {
+    if (err) return res.status(500).send('Internal server error');
+    res.json(result);
+  });
+}
+
 // ส่งออกฟังก์ชันทั้งหมด
 module.exports = {
   getAllBookingRequests,
   getBookingRequestById,
   approveBooking,
   rejectBooking,
+  history,
+  summary
 };
