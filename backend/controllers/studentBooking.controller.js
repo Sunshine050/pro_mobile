@@ -12,34 +12,45 @@ const getAllRooms = (req, res) => {
   });
 };
 
-// ฟังก์ชันสำหรับการจองห้อง
 const bookRoom = (req, res) => {
-  const { user_id, room_id, slot, booking_date } = req.body;
+  const { user_id, room_id, slot, reason } = req.body;
 
-  if (!user_id || !room_id || !slot || !booking_date) {
+  // ตรวจสอบค่าที่จำเป็น
+  if (!user_id || !room_id || !slot || !reason) {
     return res.status(400).send('Missing required fields');
   }
 
-  Room.updateSlotStatus(room_id, slot, 'pending', (err) => {
+  Room.isSlotFree(room_id, slot, (err, isFree) => {
     if (err) {
-      console.error("Error updating room slot status:", err);
-      return res.status(500).send('Error updating room slot status');
+      console.error("Error checking slot availability:", err);
+      return res.status(500).send('Error checking slot availability');
     }
 
-    Booking.create({ user_id, room_id, slot, status: 'pending', booking_date }, (err, result) => {
+    if (!isFree) {
+      return res.status(400).send('This slot is unavailable');
+    }
+
+    Room.updateSlotStatus(room_id, slot, 'pending', (err) => {
       if (err) {
-        console.error("Error creating booking:", err);
-        return res.status(500).send('Error creating booking');
+        console.error("Error updating room slot status:", err);
+        return res.status(500).send('Error updating room slot status');
       }
-      res.status(201).send('Booking created successfully');
+
+      Booking.create({ user_id, room_id, slot, status: 'pending', reason }, (err) => {
+        if (err) {
+          console.error("Error creating booking:", err);
+          return res.status(500).send('Error creating booking');
+        }
+        res.status(201).send('Booking created successfully');
+      });
     });
   });
 };
 
-// ฟังก์ชันสำหรับดึงข้อมูลการจองสำหรับผู้ใช้เฉพาะ
 const getBookings = (req, res) => {
   const { user_id } = req.params;
 
+  // ตรวจสอบว่า user_id ถูกส่งมาหรือไม่
   if (!user_id) {
     return res.status(400).send('User ID is required');
   }
@@ -57,7 +68,10 @@ const getBookmarked = (req, res) => {
   const { user_id } = req.body;
 
   Room.getBookmarked(user_id, (err, result) => {
-    if (err) return res.status(500).send('Internal server error');
+    if (err) {
+      console.error("Error fetching bookmarked rooms:", err);
+      return res.status(500).send('Internal server error');
+    }
     res.json(result);
   });
 }
@@ -65,35 +79,37 @@ const getBookmarked = (req, res) => {
 const bookmark = (req, res) => {
   const { user_id, room_id, isBookmarked } = req.body;
 
-  Room.bookmark(user_id, room_id, isBookmarked, (err, result) => {
-    if (err) return res.status(500).send('Internal server error');
-    res.send("success");
+  Room.bookmark(user_id, room_id, isBookmarked, (err) => {
+    if (err) {
+      console.error("Error updating bookmark:", err);
+      return res.status(500).send('Internal server error');
+    }
+    res.send("Bookmark updated successfully");
   });
 }
 
 const history = (req, res) => {
   const { user_id, role } = req.body;
-  try {
-    Booking.getAllBooking(user_id, role, (err, result) => {
-      if (err) return res.status(500).send('Internal server error');
-      res.json(result);
-    });
-  } catch (error) {
-    res.status(500).send('Internal server error');
-  }
+
+  Booking.getAllBooking(user_id, role, (err, result) => {
+    if (err) {
+      console.error("Error fetching booking history:", err);
+      return res.status(500).send('Internal server error');
+    }
+    res.json(result);
+  });
 }
 
 const cancel = (req, res) => {
   const { user_id, room_id, slot } = req.body;
 
-  try {
-    Booking.cancelRequest(user_id, room_id, slot, (err, result) => {
-      if (err) return res.status(500).send('Internal server error');
-      res.json(result);
-    });
-  } catch (error) {
-    res.status(500).send('Internal server error');
-  }
+  Booking.cancelRequest(user_id, room_id, slot, (err, result) => {
+    if (err) {
+      console.error("Error canceling booking:", err);
+      return res.status(500).send('Internal server error');
+    }
+    res.json(result);
+  });
 }
 
 // Export functions
