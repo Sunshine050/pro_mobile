@@ -50,12 +50,12 @@ const Room = {
         db.query('SELECT slot_status, COUNT(*) AS total_count FROM (SELECT slot_1 AS slot_status FROM rooms UNION ALL SELECT slot_2 AS slot_status FROM rooms UNION ALL SELECT slot_3 AS slot_status FROM rooms UNION ALL SELECT slot_4 AS slot_status FROM rooms) AS all_slots GROUP BY slot_status;', callback)
     },
     create: (roomData, callback) => {
-        const query = 'INSERT INTO rooms (room_name, description, slot_1, slot_2, slot_3, slot_4, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)';
-        db.query(query, [roomData.room_name, roomData.description, roomData.slot_1, roomData.slot_2, roomData.slot_3, roomData.slot_4, roomData.image_url], callback);
+        const query = 'INSERT INTO rooms (`room_name`, `desc`, `slot_1`, `slot_2`, `slot_3`, `slot_4`, `image`) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        db.query(query, [roomData.room_name, roomData.description, roomData.slot_1, roomData.slot_2, roomData.slot_3, roomData.slot_4, roomData.image], callback);
     },
     update: (roomId, roomData, callback) => {
-        const query = 'UPDATE rooms SET room_name = ?, description = ?, slot_1 = ?, slot_2 = ?, slot_3 = ?, slot_4 = ? WHERE id = ?';
-        db.query(query, [roomData.room_name, roomData.description, roomData.slot_1, roomData.slot_2, roomData.slot_3, roomData.slot_4, roomId], callback);
+        const query = 'UPDATE rooms SET `room_name` = ?, `desc` = ?, `slot_1` = ?, `slot_2` = ?, `slot_3` = ?, `slot_4` = ?, `image` WHERE id = ?';
+        db.query(query, [roomData.room_name, roomData.description, roomData.slot_1, roomData.slot_2, roomData.slot_3, roomData.slot_4, roomData.image, roomId], callback);
     },
     delete: (roomId, callback) => {
         const query = 'DELETE FROM rooms WHERE id = ?';
