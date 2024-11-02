@@ -5,9 +5,42 @@ const Booking = {
   create: (booking, callback) => {
     db.query('INSERT INTO bookings SET ?', booking, callback);
   },
-  
+
   findByUserId: (userId, callback) => {
     db.query('SELECT * FROM bookings WHERE user_id = ?', [userId], callback);
+  },
+
+  // history for each role
+  getAllBooking: (userId, role, callback) => {
+    let sql;
+    switch (role) {
+      case "student": // student => return only approver name
+        sql = 'SELECT r.room_name, b.slot, b.status, b.reason, b.booking_date, u.username AS booked_by, a.username AS approved_by FROM bookings b INNER JOIN rooms r ON b.room_id = r.id INNER JOIN users u ON b.user_id = u.id LEFT JOIN users a ON b.approved_by = a.id WHERE u.id = ?'
+        break;
+      case "approver": // approver => return only student name
+        sql = 'SELECT r.room_name, b.slot, b.status, b.reason, b.booking_date, u.username AS booked_by, a.username AS approved_by FROM bookings b INNER JOIN rooms r ON b.room_id = r.id INNER JOIN users u ON b.user_id = u.id LEFT JOIN users a ON b.approved_by = a.id WHERE a.id = ?'
+        break;
+      case "staff": // staff => return both name
+        sql = 'SELECT r.room_name, b.slot, b.status, b.reason, b.booking_date, u.username AS booked_by, a.username AS approved_by FROM bookings b INNER JOIN rooms r ON b.room_id = r.id INNER JOIN users u ON b.user_id = u.id LEFT JOIN users a ON b.approved_by = a.id'
+        break;
+    }
+
+    db.query(sql, [userId], callback);
+  },
+
+  // for student
+  // get current booking request
+  getPending: (userId, callback) => {
+    db.query('SELECT r.room_name, r.desc, r.image, b.slot, b.status FROM rooms as r INNER JOIN bookings as b ON b.room_id = r.id WHERE b.user_id = ?', [userId], callback);
+  },
+  // cancel request
+  cancelRequest: (userId, room_id, slot, callback) => {
+    db.query('UPDATE bookings SET status = "cancel" WHERE user_id = ? and status = "pending"', userId, (err, result) => {
+      if (err) {return callback(err)}
+      const updateSlot = {[slot]: "free"};
+      const roomID = {["id"]: room_id};
+      db.query('UPDATE rooms SET ? where ?', [updateSlot, roomID], callback);
+    });
   },
 
   // เพิ่มฟังก์ชันสำหรับ Approver
@@ -86,6 +119,7 @@ const Booking = {
     });
   },
 
+  // get all pending req for approver
   getAllRequests: (callback) => {
     db.query('SELECT * FROM bookings WHERE status IN ("pending")', callback);
   },
@@ -102,7 +136,8 @@ const Booking = {
       }
       return callback(null, results[0]);
     });
-  }
+  },
+
 };
 
 module.exports = Booking;

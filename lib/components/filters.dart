@@ -12,12 +12,14 @@ class Filters extends StatefulWidget {
 class _FiltersState extends State<Filters> {
   final filtersModel = FiltersModel();
   List<String> filtersList = [
-    "Available Only",
+    "Any Available",
     "08:00 - 10:00",
     "10:00 - 12:00",
     "13:00 - 15:00",
     "15:00 - 17:00"
   ];
+
+  List<String> filtersValue = ["any", "slot_1", "slot_2", "slot_3", "slot_4"];
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +30,14 @@ class _FiltersState extends State<Filters> {
       children: <Widget>[
         Wrap(
           spacing: 4.0,
-          children: filtersList.map((e) {
+          children: List.generate(filtersList.length, (index) {
             return FilterChip(
-              label: Text(
-                e,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              labelPadding: const EdgeInsets.symmetric(horizontal: 4),
-              selected: filtersModel.isSelected(e),
-              onSelected: (bool selected) => setState(() {
-                filtersModel.updateFilter(e);
-              }),
-            );
-          }).toList(),
+                label: Text(filtersList[index]),
+                selected: filtersModel.isSelected(filtersValue[index]),
+                onSelected: (bool selected) => setState(() {
+                      filtersModel.updateFilter(filtersValue[index]);
+                    }));
+          }),
         ),
       ],
     );

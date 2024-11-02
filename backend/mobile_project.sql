@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 26, 2024 at 02:04 PM
+-- Generation Time: Nov 02, 2024 at 09:57 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -34,7 +34,7 @@ CREATE TABLE `bookings` (
   `slot` enum('slot_1','slot_2','slot_3','slot_4') NOT NULL,
   `status` enum('pending','approved','rejected','cancel') NOT NULL,
   `approved_by` int(11) DEFAULT NULL,
-  `booking_date` date NOT NULL,
+  `booking_date` date NOT NULL DEFAULT current_timestamp(),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -44,9 +44,7 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `user_id`, `room_id`, `slot`, `status`, `approved_by`, `booking_date`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'slot_1', 'approved', 3, '2024-10-26', '2024-10-26 10:03:40', '2024-10-26 10:27:09'),
-(2, 1, 2, 'slot_2', 'approved', 3, '2024-10-26', '2024-10-26 10:05:54', '2024-10-26 10:27:54'),
-(3, 1, 3, 'slot_3', 'rejected', 3, '2024-10-26', '2024-10-26 10:06:16', '2024-10-26 10:34:45');
+(6, 4, 1, 'slot_1', 'pending', NULL, '2024-11-02', '2024-11-02 07:28:14', '2024-11-02 07:28:14');
 
 -- --------------------------------------------------------
 
@@ -71,7 +69,8 @@ CREATE TABLE `bookmarks` (
 CREATE TABLE `rooms` (
   `id` int(11) NOT NULL,
   `room_name` varchar(255) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
+  `desc` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
   `slot_1` enum('free','pending','reserved','disabled') NOT NULL,
   `slot_2` enum('free','pending','reserved','disabled') NOT NULL,
   `slot_3` enum('free','pending','reserved','disabled') NOT NULL,
@@ -84,10 +83,8 @@ CREATE TABLE `rooms` (
 -- Dumping data for table `rooms`
 --
 
-INSERT INTO `rooms` (`id`, `room_name`, `description`, `slot_1`, `slot_2`, `slot_3`, `slot_4`, `created_at`, `updated_at`) VALUES
-(1, 'Room A', 'A comfortable room.', 'reserved', 'pending', 'reserved', 'disabled', '2024-10-26 09:57:34', '2024-10-26 10:27:09'),
-(2, 'Room B', 'A comfortable room.', 'pending', 'reserved', 'reserved', 'disabled', '2024-10-26 09:57:53', '2024-10-26 10:27:54'),
-(3, 'Room c', 'A comfortable room.', 'pending', 'reserved', 'reserved', 'free', '2024-10-26 09:58:17', '2024-10-26 10:28:13');
+INSERT INTO `rooms` (`id`, `room_name`, `desc`, `image`, `slot_1`, `slot_2`, `slot_3`, `slot_4`, `created_at`, `updated_at`) VALUES
+(1, 'test', 'test', 'test', 'pending', 'free', 'free', 'disabled', '2024-11-01 13:45:17', '2024-11-01 14:22:08');
 
 -- --------------------------------------------------------
 
@@ -100,7 +97,7 @@ CREATE TABLE `users` (
   `role` enum('student','staff','approver') NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -110,9 +107,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role`, `username`, `password`, `email`, `created_at`, `updated_at`) VALUES
-(1, 'student', 'aaa', '$2b$10$nz4z0ta2jkno1zKQ41K2jemfY3WD5zJg5yxPK6c3Gn4.QhbI9LOou', 'student@gmail.com', '2024-10-26 09:48:05', '2024-10-26 09:48:05'),
-(2, 'staff', 'bbb', '$2b$10$Z0hyReRxgNlm43Zq7GFGF.pvaJyQkO4gvZNNlgotqoD3OYaMtpzNq', 'staff@gmail.com', '2024-10-26 09:55:04', '2024-10-26 09:55:04'),
-(3, 'approver', 'ccc', '$2b$10$SWtJrwhP..8ry6JHbMn5NuI8IS8.N7t5COQoxErvNwuP4D/RKQwny', 'approver@gmail.com', '2024-10-26 09:55:52', '2024-10-26 09:55:52');
+(2, 'staff', 'test2_1', '$2a$08$li6exSM0bsHQXEduwAGDGeTn5N8/fr4053BXNH1.ZxGCnNzmRHhGi', 'student@gmail.com', '2024-10-25 16:36:11', '2024-10-25 16:40:04'),
+(4, 'student', 'test', '$2b$10$sR7KTipFYIeEs2qpUbw8vO5dKX6OlwKi70nhFUeahYHwk5WyE1JDe', 'student@gmail.com', '2024-11-01 14:18:19', '2024-11-01 14:18:19'),
+(5, 'staff', 'staff', '$2b$10$XjMo49U7zCsSKcX/foQFyeJWVrPnBNkuVF9cKDJwwhiHZXLgOuorO', 'staff@gmail.com', '2024-11-01 15:33:23', '2024-11-01 15:33:23');
 
 --
 -- Indexes for dumped tables
@@ -156,7 +153,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `bookmarks`
@@ -168,13 +165,13 @@ ALTER TABLE `bookmarks`
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables
