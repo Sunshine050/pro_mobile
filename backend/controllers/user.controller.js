@@ -4,6 +4,7 @@ const Room = require('../models/room.model');
 const history = (req, res) => {
     const { user_id } = req.params;
     const { role } = req.user;
+    
     try {
         Booking.getAllBooking(user_id, role, (err, result) => {
             if (err) return res.status(500).send('Internal server error');
@@ -24,7 +25,6 @@ const summary = (req, res) => {
                 if (err) { res.status(500).send("Internal Server Error") }
                 res.json(result);
             });
-
         }
     } catch (err) {
         console.error(err);

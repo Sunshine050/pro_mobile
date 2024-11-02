@@ -54,7 +54,7 @@ const getBookings = (req, res) => {
 };
 
 const getBookmarked = (req, res) => {
-  const { user_id } = req.body;
+  const { user_id } = req.params;
 
   Room.getBookmarked(user_id, (err, result) => {
     if (err) {
@@ -65,10 +65,22 @@ const getBookmarked = (req, res) => {
   });
 }
 
-const bookmark = (req, res) => {
-  const { user_id, room_id, isBookmarked } = req.body;
+const bookmarked = (req, res) => {
+  const { user_id, room_id } = req.body;
 
-  Room.bookmark(user_id, room_id, isBookmarked, (err) => {
+  Room.bookmarked(user_id, room_id, (err) => {
+    if (err) {
+      console.error("Error updating bookmark:", err);
+      return res.status(500).send('Internal server error');
+    }
+    res.send("Bookmark updated successfully");
+  });
+}
+
+const unbookmarked = (req, res) => {
+  const { user_id, room_id } = req.body;
+
+  Room.unbookmarked(user_id, room_id, (err) => {
     if (err) {
       console.error("Error updating bookmark:", err);
       return res.status(500).send('Internal server error');
@@ -78,14 +90,14 @@ const bookmark = (req, res) => {
 }
 
 const cancel = (req, res) => {
-  const { user_id, room_id, slot } = req.body;
+  const { booking_id } = req.body;
 
-  Booking.cancelRequest(user_id, room_id, slot, (err, result) => {
+  Booking.cancelRequest(booking_id, (err, result) => {
     if (err) {
       console.error("Error canceling booking:", err);
       return res.status(500).send('Internal server error');
     }
-    res.json(result);
+    res.send("canceled");
   });
 }
 
@@ -95,5 +107,6 @@ module.exports = {
   cancel,
   getBookings,
   getBookmarked,
-  bookmark
+  bookmarked,
+  unbookmarked
 };

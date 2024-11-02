@@ -18,14 +18,11 @@ const Room = {
     isSlotDisabled: (roomId, slot, callback) => {
         db.query('select ? from rooms where id = ? and ? = "disabled"', [slot, roomId, slot], callback);
     },
-    bookmark: (userId, roomId, isBookmarked, callback) => {
-        // isBookmarked = true => unMarked
-        // isBookmarked = false => Marked
-        if (isBookmarked) {
-            db.query('delete from bookmarks where user_id = ? and room_id = ?', [userId, roomId], callback);
-        } else {
-            db.query('insert into bookmarks (user_id, room_id) values (?, ?)', [userId, roomId], callback);
-        }
+    bookmarked: (userId, roomId, callback) => {
+        db.query('INSERT INTO `bookmarks` (`user_id`, `room_id`) VALUES (?, ?)', [userId, roomId], callback);
+    },
+    unbookmarked: (userId, roomId, callback) => {
+        db.query('delete from bookmarks where user_id = ? and room_id = ?', [userId, roomId], callback);
     },
     getBookmarked: (userId, callback) => {
         db.query('select * from bookmarks where user_id = ?', [userId], callback);
