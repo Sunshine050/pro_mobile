@@ -1,10 +1,22 @@
 const Booking = require('../models/booking.model');
 const Room = require('../models/room.model');
+const User = require('../models/user.model');
 
-const history = (req, res) => {
+const userData = async (req, res) => {
+    const { user_id } = req.params;
+
+    try {
+        const userData = await User.findById(user_id);
+        return res.json(userData);
+    } catch (error) {
+        res.status(500).send('Internal server error');
+    }
+}
+
+const history = async (req, res) => {
     const { user_id } = req.params;
     const { role } = req.user;
-    
+
     try {
         Booking.getAllBooking(user_id, role, (err, result) => {
             if (err) return res.status(500).send('Internal server error');
@@ -16,7 +28,7 @@ const history = (req, res) => {
 }
 
 // data for dashboard
-const summary = (req, res) => {
+const summary = async (req, res) => {
     const { role } = req.user;
 
     try {
@@ -33,6 +45,7 @@ const summary = (req, res) => {
 };
 
 module.exports = {
+    userData,
     history,
     summary // data for dashboard
 }

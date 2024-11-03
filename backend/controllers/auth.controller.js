@@ -6,25 +6,6 @@ const User = require('../models/user.model');
 exports.register = async (req, res) => {
     const { username, password, email, confirm_password } = req.body;
 
-    // ตรวจสอบประเภทผู้ใช้จากอีเมล
-    let role = null;
-
-    // ใช้ email ที่ได้รับจาก req.body เพื่อทำการตรวจสอบ
-    if (email.endsWith('@lamduan.mfu.ac.th')) {
-        // ตรวจสอบว่าผู้ใช้เป็นนักเรียน, สตาฟฟ์ หรือ ผู้อนุมัติ
-        if (email.endsWith('student@lamduan.mfu.ac.th')) {
-            role = 'student';
-        } else if (email.endsWith('staff@lamduan.mfu.ac.th')) {
-            role = 'staff';
-        } else if (email.endsWith('approver@lamduan.mfu.ac.th')) {
-            role = 'approver';
-        } else {
-            return res.status(400).send('Invalid email domain');
-        }
-    } else {
-        return res.status(400).send('Invalid email domain');
-    }
-
     // แฮชรหัสผ่านก่อนบันทึก
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -32,12 +13,15 @@ exports.register = async (req, res) => {
     const newUser = {
         username,
         password: hashedPassword,
-        email,
-        role
+        email
     };
 
     try {
         // บันทึกผู้ใช้ใหม่ลงฐานข้อมูล
+        const isDuplicate = await User.findByUsername(username);
+        if (isDuplicate) {
+            return res.status(409).json({ message: 'Username already exists' });
+        }
         await User.create(newUser);
         return res.status(201).send('Register successfully');
     } catch (error) {
