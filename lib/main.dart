@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/views/approver/approver_history_page.dart';
 import 'package:pro_mobile/views/auth/login_page.dart';
 import 'package:pro_mobile/views/auth/register_page.dart';
+import 'package:pro_mobile/views/profile.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
+import 'package:pro_mobile/views/staff/staff_dashboard.dart';
+import 'package:pro_mobile/views/staff/staff_history_page.dart';
+import 'package:pro_mobile/views/student/student_history_page.dart';
+import 'package:pro_mobile/widgets/NavigationBar_approver.dart';
+import 'package:pro_mobile/widgets/NavigationBar_staff.dart';
+import 'package:pro_mobile/widgets/NavigationBar_student.dart';
 // import 'package:pro_mobile/views/homepage.dart';
 // import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 // import 'package:pro_mobile/views/approver/approver_dashboard.dart';
