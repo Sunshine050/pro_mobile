@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pro_mobile/services/auth_service.dart'; // เพิ่มการนำเข้า AuthService
+import 'package:pro_mobile/services/auth_service.dart';
 import 'package:pro_mobile/views/auth/login_page.dart';
 
 class Register extends StatefulWidget {
@@ -35,7 +35,7 @@ class _RegisterState extends State<Register> {
     } else {
       // แสดงข้อความแจ้งเตือนถ้าอีเมลไม่ถูกต้อง
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid email domain')),
+        const SnackBar(content: Text('Invalid email domain')),
       );
       return;
     }
@@ -43,7 +43,7 @@ class _RegisterState extends State<Register> {
     // ตรวจสอบความถูกต้องของรหัสผ่าน
     if (password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Passwords do not match')),
+        const SnackBar(content: Text('Passwords do not match')),
       );
       return;
     }
@@ -51,16 +51,16 @@ class _RegisterState extends State<Register> {
     try {
       // เรียกใช้งานฟังก์ชันการลงทะเบียน
       final response = await authService.register(username, email, password);
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(response as String),
-          duration: Duration(seconds: 2), // ตั้งระยะเวลาในการแสดง SnackBar
+          content: Text(response['message']), // แสดงข้อความจาก response
+          duration: const Duration(seconds: 2),
         ),
       );
 
-      // ใช้ Future.delayed เพื่อหน่วงเวลาการนำทางไปยังหน้าล็อกอิน
-      Future.delayed(Duration(seconds: 2), () {
-        // นำผู้ใช้ไปยังหน้า Login หลังจากลงทะเบียนสำเร็จ
+      // นำทางไปยังหน้า Login หลังจากลงทะเบียนสำเร็จ
+      Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Login()),

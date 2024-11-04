@@ -56,6 +56,25 @@ exports.login = async (req, res) => {
     // return res.status(200).json({ message: 'Login successfully', token, userId: user._id });
 };
 
+// Logout
+exports.logout = async (req, res) => {
+    const token = req.headers['authorization']; // ดึงโทเค็นจาก header
+
+    if (!token) {
+        return res.status(400).json({ message: 'Token is required' });
+    }
+
+    const expiresAt = new Date(Date.now() + 3600000); // ตั้งค่าหมดอายุใน 1 ชั่วโมง
+
+    try {
+        // เพิ่มโทเค็นไปยัง blacklist
+        await blacklistModel.addToken(token.split(" ")[1], expiresAt); // แยก 'Bearer' ออกจากโทเค็น
+        return res.status(200).json({ message: 'Logout successful' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Logout failed' });
+    }
+};
 
 // Get all users
 exports.getAllUsers = async (req, res) => {
