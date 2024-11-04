@@ -124,7 +124,7 @@ const Booking = {
 
   getAllBooking: (userId, role, callback) => {
     let query;
-    
+
     switch (role) {
       case "student":
         query = "SELECT b.id AS booking_id, u2.username AS approved_by, r.room_name, b.slot, b.status, b.reason, b.booking_date FROM bookings b INNER JOIN users u1 ON b.user_id = u1.id LEFT JOIN users u2 ON b.approved_by = u2.id INNER JOIN rooms r ON b.room_id = r.id WHERE b.user_id = ?";
@@ -137,7 +137,7 @@ const Booking = {
         break;
     }
     console.log(query, userId);
-    
+
     db.query(query, [userId], callback);
   },
 };

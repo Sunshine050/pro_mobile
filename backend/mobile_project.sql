@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: db:3306
--- Generation Time: Nov 03, 2024 at 06:07 PM
--- Server version: 11.5.2-MariaDB-ubu2404
--- PHP Version: 8.2.25
+-- Host: 127.0.0.1
+-- Generation Time: Nov 04, 2024 at 10:56 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,19 @@ SET time_zone = "+00:00";
 --
 -- Database: `mobile_project`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blacklist`
+--
+
+CREATE TABLE `blacklist` (
+  `id` int(11) NOT NULL,
+  `token` varchar(512) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `expires_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -45,8 +58,8 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `user_id`, `room_id`, `slot`, `status`, `approved_by`, `booking_date`, `created_at`, `updated_at`, `reason`) VALUES
-(1, 1, 1, 'slot_1', 'pending', NULL, '2024-11-03', '2024-11-02 19:29:47', '2024-11-02 19:29:47', NULL),
-(2, 1, 2, 'slot_1', 'pending', NULL, '2024-11-03', '2024-11-02 19:44:24', '2024-11-02 19:44:24', 'test');
+(1, 1, 1, 'slot_1', 'approved', 3, '2024-11-03', '2024-11-02 12:29:47', '2024-11-03 21:06:54', NULL),
+(2, 1, 2, 'slot_1', 'approved', 3, '2024-11-03', '2024-11-02 12:44:24', '2024-11-03 21:02:31', 'test');
 
 -- --------------------------------------------------------
 
@@ -67,7 +80,7 @@ CREATE TABLE `bookmarks` (
 --
 
 INSERT INTO `bookmarks` (`id`, `user_id`, `room_id`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, '2024-11-02 20:32:10', '2024-11-02 20:32:10');
+(1, 1, 1, '2024-11-02 13:32:10', '2024-11-02 13:32:10');
 
 -- --------------------------------------------------------
 
@@ -93,9 +106,9 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `room_name`, `desc`, `image`, `slot_1`, `slot_2`, `slot_3`, `slot_4`, `created_at`, `updated_at`) VALUES
-(1, 'staff', 'staff', '1730572812582-toa-heftiba-FV3GConVSss-unsplash.jpg', 'pending', 'free', 'free', 'free', '2024-11-02 18:40:12', '2024-11-02 19:29:47'),
-(2, 'staff', 'staff', '1730573614790-toa-heftiba-FV3GConVSss-unsplash.jpg', 'pending', 'free', 'free', 'free', '2024-11-02 18:53:34', '2024-11-02 19:42:46'),
-(3, 'staff', 'staff', '1730573629246-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-02 18:53:49', '2024-11-02 18:57:20');
+(1, 'staff', 'staff', '1730572812582-toa-heftiba-FV3GConVSss-unsplash.jpg', 'pending', 'free', 'free', 'free', '2024-11-02 11:40:12', '2024-11-02 12:29:47'),
+(2, 'staff', 'staff', '1730573614790-toa-heftiba-FV3GConVSss-unsplash.jpg', 'pending', 'free', 'free', 'free', '2024-11-02 11:53:34', '2024-11-02 12:42:46'),
+(3, 'staff', 'staff', '1730573629246-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-02 11:53:49', '2024-11-02 11:57:20');
 
 -- --------------------------------------------------------
 
@@ -119,13 +132,20 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role`, `username`, `password`, `email`, `created_at`, `updated_at`, `confirm_password`) VALUES
-(1, 'student', 'aaa', '$2b$10$Ibz55fxxZTMVPm8ConOB4.ERsGsd2mUdDZiyDi0H8K.UogPzwVIrK', 'student@lamduan.mfu.ac.th', '2024-11-02 17:49:09', '2024-11-02 17:49:09', '$2b$10$Ibz55fxxZTMVPm8ConOB4.ERsGsd2mUdDZiyDi0H8K.UogPzwVIrK'),
-(2, 'staff', 'bbb', '$2b$10$2EfNyzhnR9KjoLyeqMMM2eE58iVvC0ZCFuBWE.tzAgluTRdVVvXiy', 'staff@lamduan.mfu.ac.th', '2024-11-02 17:50:09', '2024-11-02 17:50:09', '$2b$10$2EfNyzhnR9KjoLyeqMMM2eE58iVvC0ZCFuBWE.tzAgluTRdVVvXiy'),
-(3, 'approver', 'ccc', '$2b$10$r2wfY/9.dia2zhtItff5IugHOc4FOUCCKMsICUOe7yINrIoz1zIVS', 'approver@lamduan.mfu.ac.th', '2024-11-02 17:50:37', '2024-11-02 17:50:37', '$2b$10$r2wfY/9.dia2zhtItff5IugHOc4FOUCCKMsICUOe7yINrIoz1zIVS');
+(1, 'student', 'aaa', '$2b$10$Ibz55fxxZTMVPm8ConOB4.ERsGsd2mUdDZiyDi0H8K.UogPzwVIrK', 'student@lamduan.mfu.ac.th', '2024-11-02 10:49:09', '2024-11-02 10:49:09', '$2b$10$Ibz55fxxZTMVPm8ConOB4.ERsGsd2mUdDZiyDi0H8K.UogPzwVIrK'),
+(2, 'staff', 'bbb', '$2b$10$2EfNyzhnR9KjoLyeqMMM2eE58iVvC0ZCFuBWE.tzAgluTRdVVvXiy', 'staff@lamduan.mfu.ac.th', '2024-11-02 10:50:09', '2024-11-02 10:50:09', '$2b$10$2EfNyzhnR9KjoLyeqMMM2eE58iVvC0ZCFuBWE.tzAgluTRdVVvXiy'),
+(3, 'approver', 'ccc', '$2b$10$r2wfY/9.dia2zhtItff5IugHOc4FOUCCKMsICUOe7yINrIoz1zIVS', 'approver@lamduan.mfu.ac.th', '2024-11-02 10:50:37', '2024-11-02 10:50:37', '$2b$10$r2wfY/9.dia2zhtItff5IugHOc4FOUCCKMsICUOe7yINrIoz1zIVS');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `blacklist`
+--
+ALTER TABLE `blacklist`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `token` (`token`);
 
 --
 -- Indexes for table `bookings`
@@ -160,6 +180,12 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `blacklist`
+--
+ALTER TABLE `blacklist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bookings`
