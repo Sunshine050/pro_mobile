@@ -1,5 +1,5 @@
 {
-    "vscord.enabled": false,
+    "vscord.enabled": true,
     "vscord.app.name": "Visual Studio Code",
     "vscord.app.privacyMode.enable": true,
     "vscord.status.idle.disconnectOnIdle": true,
