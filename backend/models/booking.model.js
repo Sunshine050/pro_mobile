@@ -12,6 +12,8 @@ const Booking = {
     });
   },
 
+
+  //ค้นหาผู้ใช้ตามไอดี
   findByUserId: (userId, callback) => {
     db.query('SELECT * FROM bookings WHERE user_id = ?', [userId], (err, results) => {
       if (err) {
@@ -21,6 +23,7 @@ const Booking = {
       callback(null, results);
     });
   },
+
 
   getPending: (userId, callback) => {
     db.query('select * from bookings where user_id = ? and status = "pending"', [userId], callback);
@@ -33,6 +36,7 @@ const Booking = {
   rejectBooking: (bookingId, approverId, callback) => {
     this.updateStatus(bookingId, 'rejected', approverId, callback);
   },
+
 
   updateStatus: (bookingId, status, approverId, callback) => {
     console.log('Updating booking status for bookingId:', bookingId, 'to status:', status);
@@ -84,7 +88,7 @@ const Booking = {
               });
             });
           } else {
-            return callback(null); // Rejecting the booking does not require additional action
+            return callback(null); 
           }
         } else {
           console.error('No booking found for bookingId:', bookingId);
@@ -94,6 +98,7 @@ const Booking = {
     });
   },
 
+  
   getAllRequests: (callback) => {
     db.query('SELECT * FROM bookings WHERE status = "pending"', (err, results) => {
       if (err) {

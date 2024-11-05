@@ -16,7 +16,6 @@ exports.register = async (req, res) => {
         username,
         password: hashedPassword,
         email,
-        confirm_password
     };
 
     try {
@@ -55,8 +54,6 @@ exports.login = async (req, res) => {
 
     // ส่ง token และ userId กลับไปใน response
     return res.status(200).json({ token, userId: user._id });
-    // ส่ง message, token, และ userId กลับไปใน response
-    // return res.status(200).json({ message: 'Login successfully', token, userId: user._id });
 };
 
 // Logout

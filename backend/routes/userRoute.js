@@ -9,5 +9,7 @@ router.get('/userData/:user_id', verifyToken, userController.userData);
 router.get('/history/:user_id', verifyToken, userController.history);
 // for dashboard
 router.get('/dashboard', verifyToken, userController.summary);
+// for history
+router.get('/history/:user_id', verifyToken, userController.history);
 
 module.exports = router;

@@ -22,7 +22,7 @@ const User = {
     });
   },
   
-  // ฟังก์ชันอื่น ๆ
+  // ดึงรายการ users ทั้งหมด
   getAllUsers: () => {
     return new Promise((resolve, reject) => {
       db.query('SELECT * FROM users', (error, results) => {

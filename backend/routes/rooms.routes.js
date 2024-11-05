@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const roomsController = require('../controllers/rooms.controller'); // อ้างอิงตัวควบคุมห้อง
-const { verifyToken } = require('../middleware/auth.middleware.js'); // นำเข้า middleware สำหรับการตรวจสอบโทเคน
+const roomsController = require('../controllers/rooms.controller'); 
+const { verifyToken } = require('../middleware/auth.middleware.js'); 
 
 // เส้นทางสำหรับดึงข้อมูลห้องทั้งหมด
 router.get('/all', verifyToken, roomsController.getAllRooms);
@@ -15,4 +15,4 @@ router.get('/search/:name', verifyToken, roomsController.searchRoom);
 // เส้นทางสำหรับกรองห้อง
 router.post('/filter', verifyToken, roomsController.filterRoom);
 
-module.exports = router; // ส่งออก router
+module.exports = router; 
