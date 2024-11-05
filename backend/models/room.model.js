@@ -19,13 +19,20 @@ const Room = {
         db.query('select ? from rooms where id = ? and ? = "disabled"', [slot, roomId, slot], callback);
     },
     bookmarked: (userId, roomId, callback) => {
-        db.query('INSERT INTO `bookmarks` (`user_id`, `room_id`) VALUES (?, ?)', [userId, roomId], callback);
+        // check duplicate
+        db.query('select room_id from `bookmarks` where user_id = ? and room_id = ?', [userId, roomId], (err, result) => {
+            // if yes don't insert and skip
+            if (!result || result.length == 0) {
+                return db.query('INSERT INTO `bookmarks` (`user_id`, `room_id`) VALUES (?, ?)', [userId, roomId], callback);
+            }
+            callback(null, result);
+        });
     },
     unbookmarked: (userId, roomId, callback) => {
         db.query('delete from bookmarks where user_id = ? and room_id = ?', [userId, roomId], callback);
     },
     getBookmarked: (userId, callback) => {
-        db.query('select * from bookmarks where user_id = ?', [userId], callback);
+        db.query('select room_id from bookmarks where user_id = ?', [userId], callback);
     },
     searchRoom: (room_name, callback) => {
         db.query('SELECT *  FROM `rooms` WHERE `room_name` LIKE ?', ['%' + room_name + '%'], (err, result) => {
