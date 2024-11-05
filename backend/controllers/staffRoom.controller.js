@@ -44,15 +44,9 @@ const createRoom = (req, res) => {
 // ฟังก์ชันสำหรับการอัปเดตข้อมูลห้อง
 const updateRoom = (req, res) => {
   const { roomId } = req.params;
-  let roomData;
-  if (!req.file) { // if no file don't update image
-    roomData = { ...req.body }
-  } else {
-    roomData = {
-      ...req.body,
-      image: `${req.file.filename}`,
-    }
-  }
+  let roomData = { ...req.body };
+  
+  if (req.file) { roomData.image = req.file.filename } // if upload new image
 
   console.log(req.body);
   Room.update(roomId, roomData, (err) => {

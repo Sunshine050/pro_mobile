@@ -1,15 +1,15 @@
 version: '3'
 services:
-  # node-server:
-  #   container_name: node-server
-  #   build: .
-  #   volumes:
-  #     - .:/usr/src/app
-  #     - dependencies:/usr/src/app/node_modules
-  #   working_dir: /usr/src/app
-  #   ports:
-  #     - 3000:3000
-  #   command: npm run dev
+  node-server:
+    container_name: my-node-server
+    build: .
+    volumes:
+      - my-server:/usr/src/app
+      - node-dependencies:/usr/src/app/node_modules
+    working_dir: /usr/src/app
+    ports:
+      - 3000:3000
+    command: npm run dev
   db:
     image: mariadb:latest
     container_name: db
@@ -36,4 +36,8 @@ services:
       - db
 volumes:
   my-database:
+    driver: local
+  node-dependencies:
+    driver: local
+  my-server:
     driver: local

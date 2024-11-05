@@ -1,10 +1,15 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const blacklistModel = require('../models/blacklist.model');
 const User = require('../models/user.model');
 
 // Register
 exports.register = async (req, res) => {
     const { username, password, email, confirm_password } = req.body;
+
+    if (password != confirm_password) {
+        res.status(401).send('Password does not match. Please try again.');
+    }
 
     // แฮชรหัสผ่านก่อนบันทึก
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -58,17 +63,16 @@ exports.login = async (req, res) => {
 
 // Logout
 exports.logout = async (req, res) => {
-    const token = req.headers['authorization']; // ดึงโทเค็นจาก header
+    const token = req.headers['authorization'].split(" ")[1]; // ดึงโทเค็นจาก header
+    const expiresAt = req.user.exp;
 
     if (!token) {
         return res.status(400).json({ message: 'Token is required' });
     }
 
-    const expiresAt = new Date(Date.now() + 3600000); // ตั้งค่าหมดอายุใน 1 ชั่วโมง
-
     try {
         // เพิ่มโทเค็นไปยัง blacklist
-        await blacklistModel.addToken(token.split(" ")[1], expiresAt); // แยก 'Bearer' ออกจากโทเค็น
+        await blacklistModel.addToken(token, expiresAt); // แยก 'Bearer' ออกจากโทเค็น
         return res.status(200).json({ message: 'Logout successful' });
     } catch (error) {
         console.error(error);

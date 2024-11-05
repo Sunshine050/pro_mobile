@@ -31,7 +31,7 @@ CREATE TABLE `blacklist` (
   `id` int(11) NOT NULL,
   `token` varchar(512) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `expires_at` timestamp NULL DEFAULT NULL
+  `expires_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

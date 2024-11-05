@@ -11,6 +11,8 @@ const roomRoutes = require('./routes/rooms.routes');
 app.use(cors()); 
 app.use(express.json());
 
+const port = 3000;
+
 // เส้นทางแสดงรูปภาพที่อัปโหลด
 app.use('/assets', express.static('assets'));
 
@@ -22,6 +24,6 @@ app.use('/staff', staffRoutes);
 app.use('/approver', approverRoutes);
 app.use('/api/auth', authRoutes);
 
-app.listen(3001, () => {
-  console.log('Server is running on port 3000');
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

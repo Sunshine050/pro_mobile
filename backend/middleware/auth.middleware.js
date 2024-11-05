@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
+const blacklistModel = require('../models/blacklist.model');
 
 // Middleware to verify token
-exports.verifyToken = (req, res, next) => {
+exports.verifyToken = async (req, res, next) => {
     const token = req.headers['authorization'];
 
     if (!token) {
@@ -9,11 +10,15 @@ exports.verifyToken = (req, res, next) => {
     }
 
     try {
+        const isRevoked = await blacklistModel.isRevoked(token.split(" ")[1]);
+        if (isRevoked) {
+            return res.status(403).send('Invalid or expired token.')
+        }
+        
         const decoded = jwt.verify(token.split(" ")[1], 'secret_key'); // แยก 'Bearer' ออกจากโทเค็น
         req.user = decoded; // บันทึกข้อมูลผู้ใช้ลงใน request
+        next();
     } catch (err) {
         return res.status(401).send('Invalid Token');
     }
-    
-    return next();
 };

@@ -1,10 +1,11 @@
-FROM node:latest
+FROM node:23-alpine
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
+COPY package.json package-lock.json ./
 
-RUN npm install
+RUN npm ci && npm cache clean --force
+RUN apk add vim
 
 COPY . .
 
