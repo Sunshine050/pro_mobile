@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
+const blacklistModel = require('../models/blacklist.model');
+
 
 // Register
 exports.register = async (req, res) => {
@@ -13,7 +15,8 @@ exports.register = async (req, res) => {
     const newUser = {
         username,
         password: hashedPassword,
-        email
+        email,
+        confirm_password
     };
 
     try {
@@ -48,7 +51,7 @@ exports.login = async (req, res) => {
     }
 
     // สร้าง token พร้อมข้อมูลบทบาทและ Object ID
-    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, 'secret_key', { expiresIn: '24h' });
+    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, 'secret_key', { expiresIn: '48H' });
 
     // ส่ง token และ userId กลับไปใน response
     return res.status(200).json({ token, userId: user._id });
