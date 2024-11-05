@@ -6,7 +6,7 @@ const userData = async (req, res) => {
     const { user_id } = req.params;
 
     try {
-        const userData = await User.findById(user_id);
+        const userData = await User.profileData(user_id);
         return res.json(userData);
     } catch (error) {
         res.status(500).send('Internal server error');

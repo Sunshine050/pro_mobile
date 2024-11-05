@@ -15,6 +15,6 @@ router.post('/bookmarked', verifyToken, studentController.bookmarked);
 router.delete('/unBookmarked', verifyToken, studentController.unbookmarked);
 
 // get bookmarked
-router.get('/getBookmarked/:id', verifyToken, studentController.getBookmarked);
+router.get('/getBookmarked/:user_id', verifyToken, studentController.getBookmarked);
 
 module.exports = router;

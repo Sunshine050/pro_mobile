@@ -7,9 +7,6 @@ const { verifyToken } = require('../middleware/auth.middleware');
 // Route สำหรับดึงคำขอการจองทั้งหมด
 router.get('/booking-requests', verifyToken, approverController.getAllBookingRequests);
 
-// Route สำหรับดึงคำขอการจองตาม ID
-router.get('/booking-request/:id', verifyToken, approverController.getBookingRequestById);
-
 // Route สำหรับอนุมัติการจอง
 router.post('/approve', verifyToken, approverController.approveBooking);
 

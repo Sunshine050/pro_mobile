@@ -21,6 +21,16 @@ const User = {
       });
     });
   },
+
+  // data for profile
+  profileData: (id) => {
+    return new Promise((resolve, reject) => {
+      db.query('SELECT id, username, email FROM users WHERE id = ?', [id], (error, results) => {
+        if (error) return reject(error);
+        resolve(results[0]); // คืนค่าผู้ใช้แรก (ถ้ามี)
+      });
+    });
+  },
   
   // ฟังก์ชันอื่น ๆ
   getAllUsers: () => {

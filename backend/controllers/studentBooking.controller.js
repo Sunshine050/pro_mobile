@@ -55,14 +55,18 @@ const getBookings = (req, res) => {
 
 const getBookmarked = (req, res) => {
   const { user_id } = req.params;
+  try {
+    Room.getBookmarked(user_id, (err, result) => {
+      if (err) {
+        console.error("Error fetching bookmarked rooms:", err);
+        return res.status(409).send('Already bookmarked');
+      }
+      res.status(200).json(result);
+    });
+  } catch (error) {
+    return res.status(500).send('Internal server error');
+  }
 
-  Room.getBookmarked(user_id, (err, result) => {
-    if (err) {
-      console.error("Error fetching bookmarked rooms:", err);
-      return res.status(500).send('Internal server error');
-    }
-    res.json(result);
-  });
 }
 
 const bookmarked = (req, res) => {
