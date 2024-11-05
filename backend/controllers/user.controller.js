@@ -35,8 +35,10 @@ const summary = async (req, res) => {
         if (role === "staff" || role === "approver") {
             Room.getSlotSummary((err, result) => {
                 if (err) { res.status(500).send("Internal Server Error") }
-                res.json(result);
+                return res.json(result);
             });
+        } else {
+            return res.status(403).send('Forbidden to access the data');
         }
     } catch (err) {
         console.error(err);

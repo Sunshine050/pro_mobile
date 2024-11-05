@@ -36,6 +36,7 @@ const searchRoom = (req, res) => {
     const { name } = req.params;
     try {
         Room.searchRoom(name, (err, result) => {
+            if (err) { throw err }
             if (!result) {
                 return res.status(404).send(`${name} not found`);
             }

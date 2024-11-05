@@ -9,7 +9,7 @@ EventEmitter.defaultMaxListeners = 20; // ปรับตามต้องก�
 // ตั้งค่า multer สำหรับการจัดเก็บไฟล์
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'assets/rooms/'); // เก็บไฟล์ที่โฟลเดอร์ uploads
+    cb(null, 'public/rooms/'); // เก็บไฟล์ที่โฟลเดอร์ uploads
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname); // ตั้งชื่อไฟล์ให้ไม่ซ้ำ
@@ -37,7 +37,10 @@ const createRoom = (req, res) => {
       return res.status(500).send('Error creating room');
     }
 
-    res.status(201).json({ message: 'Room created successfully', roomId: result.insertId });
+    res.status(201).json({ 
+      message: 'Room created successfully', 
+      // roomId: result.insertId
+    });
   });
 };
 

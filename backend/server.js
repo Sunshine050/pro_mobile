@@ -14,7 +14,7 @@ app.use(express.json());
 const port = 3000;
 
 // เส้นทางแสดงรูปภาพที่อัปโหลด
-app.use('/assets', express.static('assets'));
+app.use('/public', express.static('public'));
 
 // ตั้งค่า Routes
 app.use('/room', roomRoutes);

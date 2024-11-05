@@ -28,7 +28,14 @@ const Room = {
         db.query('select * from bookmarks where user_id = ?', [userId], callback);
     },
     searchRoom: (room_name, callback) => {
-        db.query('SELECT * FROM rooms WHERE room_name IN (?)', [room_name], callback);
+        db.query('SELECT *  FROM `rooms` WHERE `room_name` LIKE ?', ['%' + room_name + '%'], (err, result) => {
+            if (err) {
+                console.error('Error fetching room:', err);
+                callback(err, null);
+            } else {
+                callback(null, result);
+            }
+        });
     },
     filterRoom: (slots, callback) => {
         let conditions;
@@ -38,12 +45,12 @@ const Room = {
             conditions = slots.map(slot => "? = \'free\'").join(' AND ');
         }
         const sql = `SELECT * FROM rooms WHERE ${conditions}`;
-        console.log(sql);
+        // console.log(sql);
         db.query(sql, slots, callback);
     },
     // dashboard
     getSlotSummary: (callback) => {
-        db.query("SELECT SUM(CASE WHEN slot_1 = 'free' THEN 1 ELSE 0 END + CASE WHEN slot_2 = 'free' THEN 1 ELSE 0 END + CASE WHEN slot_3 = 'free' THEN 1 ELSE 0 END + CASE WHEN slot_4 = 'free' THEN 1 ELSE 0 END) AS total_free, SUM(CASE WHEN slot_1 = 'pending' THEN 1 ELSE 0 END + CASE WHEN slot_2 = 'pending' THEN 1 ELSE 0 END + CASE WHEN slot_3 = 'pending' THEN 1 ELSE 0 END + CASE WHEN slot_4 = 'pending' THEN 1 ELSE 0 END) AS total_pending, SUM(CASE WHEN slot_1 = 'reserved' THEN 1 ELSE 0 END + CASE WHEN slot_2 = 'reserved' THEN 1 ELSE 0 END + CASE WHEN slot_3 = 'reserved' THEN 1 ELSE 0 END + CASE WHEN slot_4 = 'reserved' THEN 1 ELSE 0 END) AS total_reserved, SUM(CASE WHEN slot_1 = 'disabled' THEN 1 ELSE 0 END + CASE WHEN slot_2 = 'disabled' THEN 1 ELSE 0 END + CASE WHEN slot_3 = 'disabled' THEN 1 ELSE 0 END + CASE WHEN slot_4 = 'disabled' THEN 1 ELSE 0 END) AS total_disabled, COUNT(id) * 4 AS total_slot FROM rooms", callback)
+        db.query("SELECT SUM(CASE WHEN slot_1 = 'free' THEN 1 ELSE 0 END + CASE WHEN slot_2 = 'free' THEN 1 ELSE 0 END + CASE WHEN slot_3 = 'free' THEN 1 ELSE 0 END + CASE WHEN slot_4 = 'free' THEN 1 ELSE 0 END) AS total_free, SUM(CASE WHEN slot_1 = 'pending' THEN 1 ELSE 0 END + CASE WHEN slot_2 = 'pending' THEN 1 ELSE 0 END + CASE WHEN slot_3 = 'pending' THEN 1 ELSE 0 END + CASE WHEN slot_4 = 'pending' THEN 1 ELSE 0 END) AS total_pending, SUM(CASE WHEN slot_1 = 'reserved' THEN 1 ELSE 0 END + CASE WHEN slot_2 = 'reserved' THEN 1 ELSE 0 END + CASE WHEN slot_3 = 'reserved' THEN 1 ELSE 0 END + CASE WHEN slot_4 = 'reserved' THEN 1 ELSE 0 END) AS total_reserved, SUM(CASE WHEN slot_1 = 'disabled' THEN 1 ELSE 0 END + CASE WHEN slot_2 = 'disabled' THEN 1 ELSE 0 END + CASE WHEN slot_3 = 'disabled' THEN 1 ELSE 0 END + CASE WHEN slot_4 = 'disabled' THEN 1 ELSE 0 END) AS total_disabled, CAST(COUNT(id) * 4 AS CHAR) AS total_slot FROM rooms", callback)
     },
     create: (roomData, callback) => {
         const query = 'INSERT INTO rooms (`room_name`, `desc`, `slot_1`, `slot_2`, `slot_3`, `slot_4`, `image`) VALUES (?, ?, ?, ?, ?, ?, ?)';

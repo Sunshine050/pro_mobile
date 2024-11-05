@@ -13,10 +13,8 @@ router.get('/bookings/:user_id', verifyToken, studentController.getBookings);
 // bookmarks
 router.post('/bookmarked', verifyToken, studentController.bookmarked);
 router.delete('/unBookmarked', verifyToken, studentController.unbookmarked);
+
 // get bookmarked
 router.get('/getBookmarked/:id', verifyToken, studentController.getBookmarked);
-
-// get history
-// router.post('/history', verifyToken, studentController.history) // move to user
 
 module.exports = router;

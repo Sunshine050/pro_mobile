@@ -12,11 +12,8 @@ const Blacklist = {
     isRevoked: (token) => {
         return new Promise((resolve, reject) => {
             db.query('select token from blacklist where token = ?', [token], (error, results) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(results.length > 0);
-                }
+                if (error) { return reject(error); };
+                resolve(results.length > 0);
             });
         });
     }
