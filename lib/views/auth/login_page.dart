@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/views/auth/register_page.dart';
-import 'package:pro_mobile/widgets/browse.dart';
+import 'package:pro_mobile/views/browse.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -24,63 +24,58 @@ class _LoginState extends State<Login> {
 
   void _onSignInPressed() {
     if (_formKey.currentState!.validate()) {
-      String username = _usernameController.text;
-      String password = _passwordController.text;
+      String username = _usernameController.text.trim();
+      String password = _passwordController.text.trim();
 
       // ตรวจสอบประเภทผู้ใช้จากอีเมล
-      String role;
-      if (username.endsWith('student@lamduan.mfu.ac.th')) {
-        role = 'student';
-      } else if (username.endsWith('staff@lamduan.mfu.ac.th')) {
-        role = 'staff';
-      } else if (username.endsWith('approver@lamduan.mfu.ac.th')) {
-        role = 'approver';
-      } else {
+      String? role = _getRoleFromEmail(username);
+      if (role == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Invalid email domain')),
-        );
-        print('Login failed: Invalid email domain for $username');
-        return;
-      }
-
-      // ตรวจสอบรหัสผ่านแบบ hardcoded
-      String expectedPassword;
-
-      // กำหนดรหัสผ่านตามบทบาท
-      if (role == 'student') {
-        expectedPassword =
-            'studentPassword'; // เปลี่ยนเป็นรหัสผ่านที่ต้องการสำหรับนักเรียน
-      } else if (role == 'staff') {
-        expectedPassword =
-            'staffPassword'; // เปลี่ยนเป็นรหัสผ่านที่ต้องการสำหรับเจ้าหน้าที่
-      } else if (role == 'approver') {
-        expectedPassword =
-            'approverPassword'; // เปลี่ยนเป็นรหัสผ่านที่ต้องการสำหรับผู้อนุมัติ
-      } else {
-        // ถ้า role ไม่ถูกต้อง
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Role not recognized')),
         );
         return;
       }
 
       // ตรวจสอบรหัสผ่าน
-      if (password != expectedPassword) {
+      if (!_isPasswordValid(role, password)) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Incorrect password')),
         );
-        print('Login failed: Incorrect password for $username');
         return;
       }
 
       // นำไปยัง RoomListPage เมื่อเข้าสู่ระบบสำเร็จ
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => Browse(
-                  role: role, // ส่ง role ไปยังหน้า Browse
-                )),
+          builder: (context) => Browse(role: role),
+        ),
       );
+    }
+  }
+
+  String? _getRoleFromEmail(String email) {
+    if (email.endsWith('student@lamduan.mfu.ac.th')) {
+      return 'student';
+    } else if (email.endsWith('staff@lamduan.mfu.ac.th')) {
+      return 'staff';
+    } else if (email.endsWith('approver@lamduan.mfu.ac.th')) {
+      return 'approver';
+    }
+    return null; // อีเมลไม่ถูกต้อง
+  }
+
+  bool _isPasswordValid(String role, String password) {
+    // ตรวจสอบรหัสผ่านตามบทบาท
+    switch (role) {
+      case 'student':
+        return password == 'studentPassword'; // เปลี่ยนรหัสผ่านสำหรับนักเรียน
+      case 'staff':
+        return password == 'staffPassword'; // เปลี่ยนรหัสผ่านสำหรับเจ้าหน้าที่
+      case 'approver':
+        return password == 'approverPassword'; // เปลี่ยนรหัสผ่านสำหรับผู้อนุมัติ
+      default:
+        return false; // ถ้า role ไม่ถูกต้อง
     }
   }
 
@@ -150,7 +145,6 @@ class _LoginState extends State<Login> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),

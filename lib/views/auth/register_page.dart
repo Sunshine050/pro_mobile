@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/services/auth_service.dart';
 import 'package:pro_mobile/views/auth/login_page.dart';
 
 class Register extends StatefulWidget {
@@ -12,15 +13,19 @@ class _RegisterState extends State<Register> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
+  final AuthService authService = AuthService(); // สร้างตัวแปร AuthService
 
   String? role; // สร้างตัวแปรเพื่อเก็บ role
 
-  void _register() {
-    // ตรวจสอบอีเมลและกำหนด role
+  void _register() async {
     String email = emailController.text.trim();
+    String username = usernameController.text.trim();
+    String password = passwordController.text.trim();
+    String confirmPassword = confirmPasswordController.text.trim();
 
+    // ตรวจสอบอีเมลและกำหนด role
     if (email.endsWith('student@lamduan.mfu.ac.th')) {
       role = 'student';
     } else if (email.endsWith('staff@lamduan.mfu.ac.th')) {
@@ -30,27 +35,42 @@ class _RegisterState extends State<Register> {
     } else {
       // แสดงข้อความแจ้งเตือนถ้าอีเมลไม่ถูกต้อง
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid email domain')),
+        const SnackBar(content: Text('Invalid email domain')),
       );
       return;
     }
 
-    // แสดงข้อความแจ้งเตือนเมื่อการลงทะเบียนสำเร็จ
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Registration successful!'),
-        duration: Duration(seconds: 2), // ตั้งระยะเวลาในการแสดง SnackBar
-      ),
-    );
-
-    // ใช้ Future.delayed เพื่อหน่วงเวลาการนำทางไปยังหน้าล็อกอิน
-    Future.delayed(Duration(seconds: 2), () {
-      // นำผู้ใช้ไปยังหน้า Login หลังจากลงทะเบียนสำเร็จ
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Login()),
+    // ตรวจสอบความถูกต้องของรหัสผ่าน
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Passwords do not match')),
       );
-    });
+      return;
+    }
+
+    try {
+      // เรียกใช้งานฟังก์ชันการลงทะเบียน
+      final response = await authService.register(username, email, password);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response['message']), // แสดงข้อความจาก response
+          duration: const Duration(seconds: 2),
+        ),
+      );
+
+      // นำทางไปยังหน้า Login หลังจากลงทะเบียนสำเร็จ
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Login()),
+        );
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration failed: ${e.toString()}')),
+      );
+    }
   }
 
   @override

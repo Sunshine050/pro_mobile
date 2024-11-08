@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/components/tabsBar.dart';
 
 class HistoryStaff extends StatefulWidget {
   const HistoryStaff({super.key});
@@ -109,116 +110,137 @@ class _HistoryStaffState extends State<HistoryStaff> {
         ],
       ),
       body: filteredReservations.isEmpty
-          ? Center(
-              child: _searchController.text.isNotEmpty
-                  ? Text('No results found for "${_searchController.text}"')
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: 100,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          'No reservations found',
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-            )
-          : ListView.builder(
-              itemCount: filteredReservations.length,
-              itemBuilder: (context, index) {
-                final reservation = filteredReservations[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 2.0, horizontal: 16.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ? Column(
+              children: [
+                Center(
+                  child: _searchController.text.isNotEmpty
+                      ? Text('No results found for "${_searchController.text}"')
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Left Side
-                            Expanded(
-                              flex: 2,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    reservation['room_title'],
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    maxLines: 1,
-                                  ),
-                                  SizedBox(height: 2),
-                                  Text(
-                                    '${reservation['time']}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${reservation['date']}',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            Icon(
+                              Icons.calendar_today,
+                              size: 100,
+                              color: Colors.grey,
                             ),
-                            // Right Side
-                            Expanded(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                            SizedBox(height: 20),
+                            Text(
+                              'No reservations found',
+                              style:
+                                  TextStyle(fontSize: 18, color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                ),
+              ],
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: filteredReservations.length,
+                    itemBuilder: (context, index) {
+                      final reservation = filteredReservations[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 16.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      reservation['status'] == 'Approved'
-                                          ? Icon(Icons.check_circle,
-                                              color: Colors.green)
-                                          : reservation['status'] == 'Rejected'
-                                              ? Icon(Icons.cancel,
-                                                  color: Colors.red)
-                                              : Icon(Icons.cancel,
-                                                  color: Colors.grey),
-                                      SizedBox(width: 4),
-                                      Text(
-                                        reservation['status'],
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: reservation['status'] ==
-                                                  'Approved'
-                                              ? Colors.green
-                                              : reservation['status'] ==
-                                                      'Rejected'
-                                                  ? Colors.red
-                                                  : Colors.grey,
+                                  // Left Side
+                                  Expanded(
+                                    flex: 2,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          reservation['room_title'],
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          maxLines: 1,
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(height: 2),
+                                        Text(
+                                          '${reservation['time']}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        Text(
+                                          '${reservation['date']}',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  SizedBox(height: 2),
-                                  // Show the approver only if the status is not 'Canceled'
-                                  if (reservation['status'] != 'Canceled')
-                                    Column(
+                                  // Right Side
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
                                       children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            reservation['status'] == 'Approved'
+                                                ? Icon(Icons.check_circle,
+                                                    color: Colors.green)
+                                                : reservation['status'] ==
+                                                        'Rejected'
+                                                    ? Icon(Icons.cancel,
+                                                        color: Colors.red)
+                                                    : Icon(Icons.cancel,
+                                                        color: Colors.grey),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              reservation['status'],
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                color: reservation['status'] ==
+                                                        'Approved'
+                                                    ? Colors.green
+                                                    : reservation['status'] ==
+                                                            'Rejected'
+                                                        ? Colors.red
+                                                        : Colors.grey,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 2),
+                                        // Show the approver only if the status is not 'Canceled'
+                                        if (reservation['status'] != 'Canceled')
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                'By: [${reservation['approver'] ?? 'Not assigned'}]',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w300,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         Text(
-                                          'By: [${reservation['approver'] ?? 'Not assigned'}]',
+                                          'Req By: [${reservation['user']}]',
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w300,
@@ -226,64 +248,59 @@ class _HistoryStaffState extends State<HistoryStaff> {
                                         ),
                                       ],
                                     ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 5),
+                              // Add Reason section
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
                                   Text(
-                                    'Req By: [${reservation['user']}]',
+                                    'Reason',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      fontWeight: FontWeight.w300,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  SizedBox(height: 2),
+                                  Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.all(8.0),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey,
+                                        width: 1.0,
+                                      ),
+                                      borderRadius: BorderRadius.circular(4.0),
+                                    ),
+                                    child: Text(
+                                      '${reservation['reason'] ?? 'No reason provided'}',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.black,
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        // Add Reason section
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Reason',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
+                              SizedBox(height: 10),
+                              Container(
+                                width: double.infinity,
+                                height: 1,
                                 color: Colors.grey,
                               ),
-                            ),
-                            SizedBox(height: 2),
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(8.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(4.0),
-                              ),
-                              child: Text(
-                                '${reservation['reason'] ?? 'No reason provided'}',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 10),
-                        Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+                TabsbarNavigator(role: "staff")
+              ],
             ),
     );
   }

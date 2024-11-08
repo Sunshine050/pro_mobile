@@ -1,5 +1,7 @@
 {
     "recommendations": [
-        "leonardssh.vscord"
+        "leonardssh.vscord",
+        "maxerbox.vscode-discord",
+        "geardstudios.vscode-discord-rich-presence"
     ]
 }

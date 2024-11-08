@@ -1,22 +1,12 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
+const blacklistModel = require('../models/blacklist.model');
+
 
 // Register
 exports.register = async (req, res) => {
-    const { username, password, email } = req.body;
-
-    // ตรวจสอบประเภทผู้ใช้จากอีเมล
-    let role = null;
-    if (email.endsWith('student@gmail.com')) {
-        role = 'student';
-    } else if (email.endsWith('staff@gmail.com')) {
-        role = 'staff';
-    } else if (email.endsWith('approver@gmail.com')) {
-        role = 'approver';
-    } else {
-        return res.status(400).send('Invalid email domain');
-    }
+    const { username, password, email, confirm_password } = req.body;
 
     // แฮชรหัสผ่านก่อนบันทึก
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,21 +16,21 @@ exports.register = async (req, res) => {
         username,
         password: hashedPassword,
         email,
-        role
     };
 
     try {
-        // บันทึกผู้ใช้ใหม่ลงฐานข้อมูล (ใช้ฟังก์ชัน User.create สมมติว่ามีการคืนค่าเป็นไปตามฐานข้อมูล)
+        // บันทึกผู้ใช้ใหม่ลงฐานข้อมูล
+        const isDuplicate = await User.findByUsername(username);
+        if (isDuplicate) {
+            return res.status(409).json({ message: 'Username already exists' });
+        }
         await User.create(newUser);
-
-        // ตอบกลับด้วยข้อความ "Register successfully"
         return res.status(201).send('Register successfully');
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Register failed' });
     }
 };
-
 
 // Login
 exports.login = async (req, res) => {
@@ -60,12 +50,31 @@ exports.login = async (req, res) => {
     }
 
     // สร้าง token พร้อมข้อมูลบทบาทและ Object ID
-    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, 'secret_key', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, 'secret_key', { expiresIn: '48H' });
 
     // ส่ง token และ userId กลับไปใน response
     return res.status(200).json({ token, userId: user._id });
 };
 
+// Logout
+exports.logout = async (req, res) => {
+    const token = req.headers['authorization']; // ดึงโทเค็นจาก header
+
+    if (!token) {
+        return res.status(400).json({ message: 'Token is required' });
+    }
+
+    const expiresAt = new Date(Date.now() + 3600000); // ตั้งค่าหมดอายุใน 1 ชั่วโมง
+
+    try {
+        // เพิ่มโทเค็นไปยัง blacklist
+        await blacklistModel.addToken(token.split(" ")[1], expiresAt); // แยก 'Bearer' ออกจากโทเค็น
+        return res.status(200).json({ message: 'Logout successful' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: 'Logout failed' });
+    }
+};
 
 // Get all users
 exports.getAllUsers = async (req, res) => {

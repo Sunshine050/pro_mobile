@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 26, 2024 at 02:04 PM
+-- Generation Time: Nov 04, 2024 at 10:56 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,6 +24,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `blacklist`
+--
+
+CREATE TABLE `blacklist` (
+  `id` int(11) NOT NULL,
+  `token` varchar(512) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `expires_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `bookings`
 --
 
@@ -34,19 +47,19 @@ CREATE TABLE `bookings` (
   `slot` enum('slot_1','slot_2','slot_3','slot_4') NOT NULL,
   `status` enum('pending','approved','rejected','cancel') NOT NULL,
   `approved_by` int(11) DEFAULT NULL,
-  `booking_date` date NOT NULL,
+  `booking_date` date NOT NULL DEFAULT current_timestamp(),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `reason` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `user_id`, `room_id`, `slot`, `status`, `approved_by`, `booking_date`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'slot_1', 'approved', 3, '2024-10-26', '2024-10-26 10:03:40', '2024-10-26 10:27:09'),
-(2, 1, 2, 'slot_2', 'approved', 3, '2024-10-26', '2024-10-26 10:05:54', '2024-10-26 10:27:54'),
-(3, 1, 3, 'slot_3', 'rejected', 3, '2024-10-26', '2024-10-26 10:06:16', '2024-10-26 10:34:45');
+INSERT INTO `bookings` (`id`, `user_id`, `room_id`, `slot`, `status`, `approved_by`, `booking_date`, `created_at`, `updated_at`, `reason`) VALUES
+(1, 1, 1, 'slot_1', 'approved', 3, '2024-11-03', '2024-11-02 12:29:47', '2024-11-03 21:06:54', NULL),
+(2, 1, 2, 'slot_1', 'approved', 3, '2024-11-03', '2024-11-02 12:44:24', '2024-11-03 21:02:31', 'test');
 
 -- --------------------------------------------------------
 
@@ -62,6 +75,13 @@ CREATE TABLE `bookmarks` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `bookmarks`
+--
+
+INSERT INTO `bookmarks` (`id`, `user_id`, `room_id`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, '2024-11-02 13:32:10', '2024-11-02 13:32:10');
+
 -- --------------------------------------------------------
 
 --
@@ -71,7 +91,8 @@ CREATE TABLE `bookmarks` (
 CREATE TABLE `rooms` (
   `id` int(11) NOT NULL,
   `room_name` varchar(255) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
+  `desc` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
   `slot_1` enum('free','pending','reserved','disabled') NOT NULL,
   `slot_2` enum('free','pending','reserved','disabled') NOT NULL,
   `slot_3` enum('free','pending','reserved','disabled') NOT NULL,
@@ -84,10 +105,10 @@ CREATE TABLE `rooms` (
 -- Dumping data for table `rooms`
 --
 
-INSERT INTO `rooms` (`id`, `room_name`, `description`, `slot_1`, `slot_2`, `slot_3`, `slot_4`, `created_at`, `updated_at`) VALUES
-(1, 'Room A', 'A comfortable room.', 'reserved', 'pending', 'reserved', 'disabled', '2024-10-26 09:57:34', '2024-10-26 10:27:09'),
-(2, 'Room B', 'A comfortable room.', 'pending', 'reserved', 'reserved', 'disabled', '2024-10-26 09:57:53', '2024-10-26 10:27:54'),
-(3, 'Room c', 'A comfortable room.', 'pending', 'reserved', 'reserved', 'free', '2024-10-26 09:58:17', '2024-10-26 10:28:13');
+INSERT INTO `rooms` (`id`, `room_name`, `desc`, `image`, `slot_1`, `slot_2`, `slot_3`, `slot_4`, `created_at`, `updated_at`) VALUES
+(1, 'staff', 'staff', '1730572812582-toa-heftiba-FV3GConVSss-unsplash.jpg', 'pending', 'free', 'free', 'free', '2024-11-02 11:40:12', '2024-11-02 12:29:47'),
+(2, 'staff', 'staff', '1730573614790-toa-heftiba-FV3GConVSss-unsplash.jpg', 'pending', 'free', 'free', 'free', '2024-11-02 11:53:34', '2024-11-02 12:42:46'),
+(3, 'staff', 'staff', '1730573629246-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-02 11:53:49', '2024-11-02 11:57:20');
 
 -- --------------------------------------------------------
 
@@ -97,26 +118,34 @@ INSERT INTO `rooms` (`id`, `room_name`, `description`, `slot_1`, `slot_2`, `slot
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `role` enum('student','staff','approver') NOT NULL,
+  `role` enum('student','staff','approver') NOT NULL DEFAULT 'student',
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `confirm_password` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `role`, `username`, `password`, `email`, `created_at`, `updated_at`) VALUES
-(1, 'student', 'aaa', '$2b$10$nz4z0ta2jkno1zKQ41K2jemfY3WD5zJg5yxPK6c3Gn4.QhbI9LOou', 'student@gmail.com', '2024-10-26 09:48:05', '2024-10-26 09:48:05'),
-(2, 'staff', 'bbb', '$2b$10$Z0hyReRxgNlm43Zq7GFGF.pvaJyQkO4gvZNNlgotqoD3OYaMtpzNq', 'staff@gmail.com', '2024-10-26 09:55:04', '2024-10-26 09:55:04'),
-(3, 'approver', 'ccc', '$2b$10$SWtJrwhP..8ry6JHbMn5NuI8IS8.N7t5COQoxErvNwuP4D/RKQwny', 'approver@gmail.com', '2024-10-26 09:55:52', '2024-10-26 09:55:52');
+INSERT INTO `users` (`id`, `role`, `username`, `password`, `email`, `created_at`, `updated_at`, `confirm_password`) VALUES
+(1, 'student', 'aaa', '$2b$10$Ibz55fxxZTMVPm8ConOB4.ERsGsd2mUdDZiyDi0H8K.UogPzwVIrK', 'student@lamduan.mfu.ac.th', '2024-11-02 10:49:09', '2024-11-02 10:49:09', '$2b$10$Ibz55fxxZTMVPm8ConOB4.ERsGsd2mUdDZiyDi0H8K.UogPzwVIrK'),
+(2, 'staff', 'bbb', '$2b$10$2EfNyzhnR9KjoLyeqMMM2eE58iVvC0ZCFuBWE.tzAgluTRdVVvXiy', 'staff@lamduan.mfu.ac.th', '2024-11-02 10:50:09', '2024-11-02 10:50:09', '$2b$10$2EfNyzhnR9KjoLyeqMMM2eE58iVvC0ZCFuBWE.tzAgluTRdVVvXiy'),
+(3, 'approver', 'ccc', '$2b$10$r2wfY/9.dia2zhtItff5IugHOc4FOUCCKMsICUOe7yINrIoz1zIVS', 'approver@lamduan.mfu.ac.th', '2024-11-02 10:50:37', '2024-11-02 10:50:37', '$2b$10$r2wfY/9.dia2zhtItff5IugHOc4FOUCCKMsICUOe7yINrIoz1zIVS');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `blacklist`
+--
+ALTER TABLE `blacklist`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `token` (`token`);
 
 --
 -- Indexes for table `bookings`
@@ -153,16 +182,22 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `blacklist`
+--
+ALTER TABLE `blacklist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `bookmarks`
 --
 ALTER TABLE `bookmarks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `rooms`
@@ -174,7 +209,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
@@ -184,16 +219,16 @@ ALTER TABLE `users`
 -- Constraints for table `bookings`
 --
 ALTER TABLE `bookings`
-  ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`),
-  ADD CONSTRAINT `bookings_ibfk_3` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `bookings_approved_by_fk` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `bookings_room_fk` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `bookings_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `bookmarks`
 --
 ALTER TABLE `bookmarks`
-  ADD CONSTRAINT `bookmarks_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `bookmarks_ibfk_2` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`);
+  ADD CONSTRAINT `bookmarks_room_fk` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `bookmarks_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

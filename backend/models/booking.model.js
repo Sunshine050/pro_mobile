@@ -3,14 +3,32 @@ const Room = require('./room.model');
 
 const Booking = {
   create: (booking, callback) => {
-    db.query('INSERT INTO bookings SET ?', booking, callback);
-  },
-  
-  findByUserId: (userId, callback) => {
-    db.query('SELECT * FROM bookings WHERE user_id = ?', [userId], callback);
+    db.query('INSERT INTO bookings SET ?', booking, (err, results) => {
+      if (err) {
+        console.error('Error creating booking:', err);
+        return callback(err);
+      }
+      callback(null, results.insertId);
+    });
   },
 
-  // เพิ่มฟังก์ชันสำหรับ Approver
+
+  //ค้นหาผู้ใช้ตามไอดี
+  findByUserId: (userId, callback) => {
+    db.query('SELECT * FROM bookings WHERE user_id = ?', [userId], (err, results) => {
+      if (err) {
+        console.error('Error finding bookings by userId:', err);
+        return callback(err);
+      }
+      callback(null, results);
+    });
+  },
+
+
+  getPending: (userId, callback) => {
+    db.query('select * from bookings where user_id = ? and status = "pending"', [userId], callback);
+  },
+
   approveBooking: (bookingId, approverId, callback) => {
     this.updateStatus(bookingId, 'approved', approverId, callback);
   },
@@ -19,16 +37,15 @@ const Booking = {
     this.updateStatus(bookingId, 'rejected', approverId, callback);
   },
 
+
   updateStatus: (bookingId, status, approverId, callback) => {
     console.log('Updating booking status for bookingId:', bookingId, 'to status:', status);
 
-    // ตรวจสอบประเภทข้อมูลก่อน
     if (typeof bookingId !== 'number' || typeof status !== 'string' || typeof approverId !== 'number') {
       console.error('Invalid data types:', { bookingId, status, approverId });
       return callback(new Error('Invalid data types'));
     }
 
-    // ตรวจสอบว่า approverId มีอยู่ใน users
     db.query('SELECT * FROM users WHERE id = ?', [approverId], (err, results) => {
       if (err) {
         console.error('Error checking approver ID:', err);
@@ -40,18 +57,15 @@ const Booking = {
         return callback(new Error('Approver ID not found'));
       }
 
-      // อัปเดตสถานะการจอง
       db.query('UPDATE bookings SET status = ?, approved_by = ? WHERE id = ?', [status, approverId, bookingId], (err, results) => {
         if (err) {
           console.error('Error updating booking status:', err);
           return callback(err);
         }
 
-        console.log('Update results:', results);
         if (results.affectedRows > 0) {
           if (status === 'approved') {
-            // ดึงข้อมูลการจองและอัปเดตสถานะของห้อง
-            Booking.getRequestById(bookingId, (err, booking) => {
+            this.getRequestById(bookingId, (err, booking) => {
               if (err) {
                 console.error('Error retrieving booking details:', err);
                 return callback(err);
@@ -64,7 +78,6 @@ const Booking = {
               const { room_id, slot } = booking;
               const roomStatus = 'reserved';
 
-              // อัปเดตสถานะของห้อง
               Room.updateSlotStatus(room_id, slot, roomStatus, (err) => {
                 if (err) {
                   console.error('Error updating room status:', err);
@@ -75,8 +88,7 @@ const Booking = {
               });
             });
           } else {
-            // ถ้าถูกปฏิเสธให้จบการทำงานเลย
-            return callback(null);
+            return callback(null); 
           }
         } else {
           console.error('No booking found for bookingId:', bookingId);
@@ -86,8 +98,15 @@ const Booking = {
     });
   },
 
+  
   getAllRequests: (callback) => {
-    db.query('SELECT * FROM bookings WHERE status IN ("pending")', callback);
+    db.query('SELECT * FROM bookings WHERE status = "pending"', (err, results) => {
+      if (err) {
+        console.error('Error retrieving all pending bookings:', err);
+        return callback(err);
+      }
+      callback(null, results);
+    });
   },
 
   getRequestById: (bookingId, callback) => {
@@ -102,7 +121,30 @@ const Booking = {
       }
       return callback(null, results[0]);
     });
-  }
+  },
+
+  cancelRequest: (bookingId, callback) => {
+    db.query("UPDATE `bookings` SET `status` = 'cancel' WHERE `bookings`.`id` = ? ", [bookingId], callback);
+  },
+
+  getAllBooking: (userId, role, callback) => {
+    let query;
+
+    switch (role) {
+      case "student":
+        query = "SELECT b.id AS booking_id, u2.username AS approved_by, r.room_name, b.slot, b.status, b.reason, b.booking_date FROM bookings b INNER JOIN users u1 ON b.user_id = u1.id LEFT JOIN users u2 ON b.approved_by = u2.id INNER JOIN rooms r ON b.room_id = r.id WHERE b.user_id = ?";
+        break;
+      case "staff":
+        query = "SELECT b.id AS booking_id, u1.username AS booked_by, u2.username AS approved_by, r.room_name, b.slot, b.status, b.reason, b.booking_date FROM bookings b INNER JOIN users u1 ON b.user_id = u1.id LEFT JOIN users u2 ON b.approved_by = u2.id INNER JOIN rooms r ON b.room_id = r.id";
+        break;
+      case "approver":
+        query = "SELECT b.id AS booking_id, u1.username AS booked_by, r.room_name, b.slot, b.status, b.reason, b.booking_date FROM bookings b INNER JOIN users u1 ON b.user_id = u1.id LEFT JOIN users u2 ON b.approved_by = u2.id INNER JOIN rooms r ON b.room_id = r.id WHERE b.approved_by = ?";
+        break;
+    }
+    console.log(query, userId);
+
+    db.query(query, [userId], callback);
+  },
 };
 
 module.exports = Booking;

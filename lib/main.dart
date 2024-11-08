@@ -1,20 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/views/approver/approver_history_page.dart';
 import 'package:pro_mobile/views/auth/login_page.dart';
 import 'package:pro_mobile/views/auth/register_page.dart';
+import 'package:pro_mobile/views/profile.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
-import 'package:pro_mobile/views/approver/approver_dashboard.dart';
-import 'package:pro_mobile/views/approver/approver_history_page.dart';
-import 'package:pro_mobile/views/staff/staff_history_page.dart';
 import 'package:pro_mobile/views/staff/staff_dashboard.dart';
-import 'package:pro_mobile/views/student/booking_form_page.dart';
-import 'package:pro_mobile/views/student/booking_status_page.dart';
+import 'package:pro_mobile/views/staff/staff_history_page.dart';
 import 'package:pro_mobile/views/student/student_history_page.dart';
-import 'package:pro_mobile/views/approver/approve_request_page.dart';
-import 'package:pro_mobile/widgets/NavigationBar_student.dart';
-import 'package:pro_mobile/widgets/browse.dart';
-import 'package:pro_mobile/widgets/profile.dart';
-import 'package:pro_mobile/widgets/NavigationBar_staff.dart';
 import 'package:pro_mobile/widgets/NavigationBar_approver.dart';
+import 'package:pro_mobile/widgets/NavigationBar_staff.dart';
+import 'package:pro_mobile/widgets/NavigationBar_student.dart';
+// import 'package:pro_mobile/views/homepage.dart';
+// import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
+// import 'package:pro_mobile/views/approver/approver_dashboard.dart';
+// import 'package:pro_mobile/views/approver/approver_history_page.dart';
+// import 'package:pro_mobile/views/staff/staff_history_page.dart';
+// import 'package:pro_mobile/views/staff/staff_dashboard.dart';
+// import 'package:pro_mobile/views/student/booking_form_page.dart';
+// import 'package:pro_mobile/views/student/booking_status_page.dart';
+// import 'package:pro_mobile/views/student/student_history_page.dart';
+// import 'package:pro_mobile/views/approver/approve_request_page.dart';
+// import 'package:pro_mobile/widgets/NavigationBar_student.dart';
+// import 'package:pro_mobile/widgets/browse.dart';
+// import 'package:pro_mobile/views/profile.dart';
+// import 'package:pro_mobile/widgets/NavigationBar_staff.dart';
+// import 'package:pro_mobile/widgets/NavigationBar_approver.dart';
 
 void main() => runApp(MyApp());
 
@@ -22,21 +32,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Room Management App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const Browse(
-        role: '1',
-      ), // หน้าหลักเป็น Login
-      debugShowCheckedModeBanner: false,
-    );
+        title: 'Room Management App',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const Login() // หน้าหลักเป็น Login
+        );
   }
 }
 
 class MainScreen extends StatefulWidget {
-  final String
-      role; // รับ role ของผู้ใช้เป็นพารามิเตอร์ เช่น 'student', 'staff', 'approver'
+  final String role;
 
   const MainScreen({Key? key, required this.role}) : super(key: key);
 
@@ -63,19 +69,28 @@ class _MainScreenState extends State<MainScreen> {
     if (role == 'student') {
       return [
         History(), // หน้า History
-        Profile(userId: '1'), // หน้า Profile
+        Profile(
+          userId: '1',
+          role: '1',
+        ), // หน้า Profile
       ];
     } else if (role == 'staff') {
       return [
         DashboardStaff(), // หน้า Dashboard ของ Staff
         HistoryStaff(), // หน้า History
-        Profile(userId: '2'), // หน้า Profile
+        Profile(
+          userId: '2',
+          role: '1',
+        ), // หน้า Profile
       ];
     } else if (role == 'approver') {
       return [
         DashboardStaff(), // หน้า Dashboard ของ Approver
         HistoryLec(), // หน้า History
-        Profile(userId: '3'), // หน้า Profile
+        Profile(
+          userId: '3',
+          role: '1',
+        ), // หน้า Profile
       ];
     } else {
       return [Login()]; // ถ้า role ไม่ถูกต้อง ให้แสดงหน้า Login

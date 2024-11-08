@@ -1,4 +1,5 @@
 const Room = require('../models/room.model');
+const Booking = require('../models/booking.model');
 const multer = require('multer');
 const EventEmitter = require('events');
 
@@ -8,7 +9,7 @@ EventEmitter.defaultMaxListeners = 20; // ปรับตามต้องก�
 // ตั้งค่า multer สำหรับการจัดเก็บไฟล์
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // เก็บไฟล์ที่โฟลเดอร์ uploads
+    cb(null, 'assets/rooms/'); // เก็บไฟล์ที่โฟลเดอร์ uploads
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + '-' + file.originalname); // ตั้งชื่อไฟล์ให้ไม่ซ้ำ
@@ -16,32 +17,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
-// ฟังก์ชันดึงข้อมูลห้องทั้งหมด
-const getAllRooms = async (req, res) => {
-  try {
-    const rooms = await Room.findAll(); // ดึงข้อมูลห้องทั้งหมด
-    res.json(rooms); // ส่งข้อมูลห้องกลับไปยังผู้ใช้
-  } catch (err) {
-    console.error('Error fetching rooms:', err);
-    res.status(500).send('Error fetching rooms'); // ส่งข้อความผิดพลาดกลับไป
-  }
-};
-
-// ฟังก์ชันดึงข้อมูลห้องตาม ID
-const getOneRoom = async (req, res) => {
-  const { roomId } = req.params;
-  try {
-    const room = await Room.findById(roomId);
-    if (!room) {
-      return res.status(404).send('Room not found');
-    }
-    res.json(room);
-  } catch (err) {
-    console.error('Error fetching room:', err);
-    return res.status(500).send('Error fetching room');
-  }
-};
 
 // ฟังก์ชันสำหรับการสร้างห้องพร้อมการอัปโหลดรูปภาพ
 const createRoom = (req, res) => {
@@ -53,7 +28,7 @@ const createRoom = (req, res) => {
   // สร้างข้อมูลห้องพร้อมกับ image_url ที่อัปโหลด
   const roomData = {
     ...req.body,
-    image_url: `/uploads/${req.file.filename}`, // เก็บ URL ของรูปภาพ
+    image: `${req.file.filename}`, // เก็บ URL ของรูปภาพ
   };
 
   Room.create(roomData, (err, result) => {
@@ -69,53 +44,26 @@ const createRoom = (req, res) => {
 // ฟังก์ชันสำหรับการอัปเดตข้อมูลห้อง
 const updateRoom = (req, res) => {
   const { roomId } = req.params;
-  Room.update(roomId, req.body, (err) => {
+  let roomData;
+  if (!req.file) { // if no file don't update image
+    roomData = { ...req.body }
+  } else {
+    roomData = {
+      ...req.body,
+      image: `${req.file.filename}`,
+    }
+  }
+
+  console.log(req.body);
+  Room.update(roomId, roomData, (err) => {
     if (err) return res.status(500).send('Error updating room');
     res.send('Room updated successfully');
   });
 };
 
-// ฟังก์ชันสำหรับการลบห้อง
-const deleteRoom = (req, res) => {
-  const { roomId } = req.params;
-  Room.delete(roomId, (err) => {
-    if (err) return res.status(500).send('Error deleting room');
-    res.send('Room deleted successfully');
-  });
-};
-
-// ฟังก์ชันสำหรับการจองห้อง
-const requestBooking = (req, res) => {
-  const { roomId, userId, slot, bookingDate } = req.body;
-
-  // ตรวจสอบประเภทของผู้ใช้ (ต้องเป็นนักเรียน)
-  const userType = req.user.type; // สมมติว่า req.user มีข้อมูลประเภทผู้ใช้
-
-  if (userType !== 'student') {
-    return res.status(403).send('Only students can book rooms'); // อนุญาตให้เฉพาะนักเรียนจองห้อง
-  }
-
-  Room.checkRoomAvailability(roomId, slot, (err, results) => {
-    if (err) return res.status(500).send('Error checking room availability');
-
-    if (results.length > 0) {
-      return res.status(400).send('Room is already booked for this slot');
-    } else {
-      Room.bookRoom(roomId, userId, slot, bookingDate, (err) => {
-        if (err) return res.status(500).send('Error booking room');
-        res.send('Room booked successfully');
-      });
-    }
-  });
-};
-
 // ส่งออกฟังก์ชันทั้งหมด
 module.exports = {
-  getAllRooms,
-  getOneRoom,
   createRoom,
   updateRoom,
-  deleteRoom,
-  requestBooking,
-  upload, 
+  upload,
 };

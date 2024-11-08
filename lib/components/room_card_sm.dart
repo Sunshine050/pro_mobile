@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/booking.dart';
+import 'package:pro_mobile/views/student/booking_form_page.dart';
 
 class RoomCardSm extends StatefulWidget {
   final String roomId, roomName, img, slot_1, slot_2, slot_3, slot_4;

@@ -9,8 +9,8 @@ exports.verifyToken = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token.split(" ")[1], 'secret_key'); // แยก 'Bearer' ออกจากโทเค็น
-        req.user = decoded; // บันทึกข้อมูลผู้ใช้ลงใน request
+        const decoded = jwt.verify(token.split(" ")[1], 'secret_key'); 
+        req.user = decoded;
     } catch (err) {
         return res.status(401).send('Invalid Token');
     }

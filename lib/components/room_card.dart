@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/time_slot.dart';
-import 'package:pro_mobile/widgets/booking.dart';
+import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
+import 'package:pro_mobile/views/student/booking_form_page.dart';
 
 class RoomCard extends StatefulWidget {
   final String role,
@@ -33,7 +34,7 @@ class _RoomCardState extends State<RoomCard> {
   List<dynamic> bookmarkedState = [
     false,
     Colors.black,
-    const Icon(Icons.bookmark_add_outlined)
+    Icon(Icons.bookmark_add_outlined)
   ];
 
   void bookmark() {
@@ -43,11 +44,11 @@ class _RoomCardState extends State<RoomCard> {
       if (bookmarkedState[0] == false) {
         bookmarkedState[0] = true;
         bookmarkedState[1] = const Color.fromARGB(255, 255, 193, 7);
-        bookmarkedState[2] = const Icon(Icons.bookmark_added_rounded);
+        bookmarkedState[2] = Icon(Icons.bookmark_added_rounded);
       } else {
         bookmarkedState[0] = false;
         bookmarkedState[1] = Colors.black;
-        bookmarkedState[2] = const Icon(Icons.bookmark_add_outlined);
+        bookmarkedState[2] = Icon(Icons.bookmark_add_outlined);
       }
     });
   }
@@ -74,7 +75,7 @@ class _RoomCardState extends State<RoomCard> {
                           BorderRadius.only(bottomRight: Radius.circular(16)),
                     ),
                     child: Image.asset(
-                      widget.img, // เปลี่ยนตรงนี้ให้ใช้ widget.img
+                      "assets/rooms/${widget.img}", // เปลี่ยนตรงนี้ให้ใช้ widget.img
                       fit: BoxFit.cover,
                       height: 165,
                     ),
@@ -112,9 +113,12 @@ class _RoomCardState extends State<RoomCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      widget.roomName,
-                      style: Theme.of(context).textTheme.titleMedium,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Text(
+                        widget.roomName,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                     ),
                     // student => bookmark btn : else none
                     Builder(builder: (context) {
@@ -181,12 +185,13 @@ class _RoomCardState extends State<RoomCard> {
                                       const Color.fromRGBO(16, 80, 176, 1.0)),
                               onPressed: () => {
                                     // to edit page
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //       builder: (context) =>
-                                    //           Booking(roomId: widget.roomId)),
-                                    // )
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ManageRooms(
+                                                  isAdd: false,
+                                                  roomId: widget.roomId,
+                                                )))
                                   },
                               child: const Text("Edit",
                                   style: TextStyle(

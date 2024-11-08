@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/components/tabsBar.dart';
 
 class BookingStatus extends StatefulWidget {
   @override
@@ -12,12 +13,18 @@ class _BookingStatusPageState extends State<BookingStatus> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child:
-              status == 'blank' ? _buildBlankStatus() : _buildPendingContent(),
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: status == 'blank'
+                  ? _buildBlankStatus()
+                  : _buildPendingContent(),
+            ),
+          ),
+          TabsbarNavigator(role: "student")
+        ],
       ),
     );
   }

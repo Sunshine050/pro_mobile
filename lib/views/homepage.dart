@@ -16,7 +16,8 @@ class _HomepageState extends State<Homepage> {
         children: [
           // Background Image
           Image.asset(
-            'assets/images/home.jpg', // Make sure the path is correct
+            // 'assets/images/home.jpg', // Make sure the path is correct
+            'assets/rooms/room_1.jpg',
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
@@ -26,16 +27,16 @@ class _HomepageState extends State<Homepage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Welcome to the',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 28,
                     color: Colors.white,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
                 const SizedBox(height: 8),
-                Text(
+                const Text(
                   'Meeting Room Booking Service',
                   style: TextStyle(
                     fontSize: 22,
@@ -53,8 +54,10 @@ class _HomepageState extends State<Homepage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF1050B0), // Updated Button color
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    backgroundColor:
+                        const Color(0xFF1050B0), // Updated Button color
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

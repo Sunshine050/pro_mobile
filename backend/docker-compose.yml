@@ -1,0 +1,39 @@
+version: '3'
+services:
+  # node-server:
+  #   container_name: node-server
+  #   build: .
+  #   volumes:
+  #     - .:/usr/src/app
+  #     - dependencies:/usr/src/app/node_modules
+  #   working_dir: /usr/src/app
+  #   ports:
+  #     - 3000:3000
+  #   command: npm run dev
+  db:
+    image: mariadb:latest
+    container_name: db
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: mobile_project
+    ports:
+      - "3306:3306"
+    volumes:
+      - my-database:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+volumes:
+  my-database:
+    driver: local

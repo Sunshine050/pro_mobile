@@ -97,21 +97,21 @@ class _StaffAddEditRoomState extends State<StaffAddEditRoom> {
                 },
               ),
               const SizedBox(height: 20),
-              DropdownButtonFormField<String>(
-                value: _status,
-                items: ['free', 'pending', 'reserved', 'disabled']
-                    .map((status) => DropdownMenuItem(
-                          value: status,
-                          child: Text(status),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _status = value!;
-                  });
-                },
-                decoration: const InputDecoration(labelText: 'Room Status'),
-              ),
+              // DropdownButtonFormField<String>(
+              //   value: _status,
+              //   items: ['free', 'pending', 'reserved', 'disabled']
+              //       .map((status) => DropdownMenuItem(
+              //             value: status,
+              //             child: Text(status),
+              //           ))
+              //       .toList(),
+              //   onChanged: (value) {
+              //     setState(() {
+              //       _status = value!;
+              //     });
+              //   },
+              //   decoration: const InputDecoration(labelText: 'Room Status'),
+              // ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: widget.room == null ? addRoom : editRoom,
