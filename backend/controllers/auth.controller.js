@@ -2,6 +2,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const blacklistModel = require('../models/blacklist.model');
 const User = require('../models/user.model');
+require('dotenv').config();
+
+API_KEY = process.env.API_KEY || "my-secret-key";
 
 // Register
 exports.register = async (req, res) => {
@@ -53,10 +56,10 @@ exports.login = async (req, res) => {
     }
 
     // สร้าง token พร้อมข้อมูลบทบาทและ Object ID
-    const token = jwt.sign({ userId: user._id, username: user.username, role: user.role }, 'secret_key', { expiresIn: '24h' });
+    const token = jwt.sign({ userId: user.id, username: user.username, role: user.role }, API_KEY, { expiresIn: '7d' });
 
     // ส่ง token และ userId กลับไปใน response
-    return res.status(200).json({ token, userId: user._id });
+    return res.status(200).json({ token });
     // ส่ง message, token, และ userId กลับไปใน response
     // return res.status(200).json({ message: 'Login successfully', token, userId: user._id });
 };

@@ -3,10 +3,10 @@ const Room = require('../models/room.model');
 const User = require('../models/user.model');
 
 const userData = async (req, res) => {
-    const { user_id } = req.params;
+    const { userId } = req.user;
 
     try {
-        const userData = await User.profileData(user_id);
+        const userData = await User.profileData(userId);
         return res.json(userData);
     } catch (error) {
         res.status(500).send('Internal server error');
@@ -14,11 +14,10 @@ const userData = async (req, res) => {
 }
 
 const history = async (req, res) => {
-    const { user_id } = req.params;
-    const { role } = req.user;
+    const { userId, role } = req.user;
 
     try {
-        Booking.getAllBooking(user_id, role, (err, result) => {
+        Booking.getAllBooking(userId, role, (err, result) => {
             if (err) return res.status(500).send('Internal server error');
             res.json(result);
         });
@@ -32,7 +31,7 @@ const summary = async (req, res) => {
     const { role } = req.user;
 
     try {
-        if (role === "staff" || role === "approver") {
+        if (role !== "student") {
             Room.getSlotSummary((err, result) => {
                 if (err) { res.status(500).send("Internal Server Error") }
                 return res.json(result);

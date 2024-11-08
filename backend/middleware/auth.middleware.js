@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken');
 const blacklistModel = require('../models/blacklist.model');
+require('dotenv').config();
+
+API_KEY = process.env.API_KEY || "my-secret-key";
 
 // Middleware to verify token
 exports.verifyToken = async (req, res, next) => {
@@ -15,7 +18,7 @@ exports.verifyToken = async (req, res, next) => {
             return res.status(403).send('Invalid or expired token.')
         }
         
-        const decoded = jwt.verify(token.split(" ")[1], 'secret_key'); // แยก 'Bearer' ออกจากโทเค็น
+        const decoded = jwt.verify(token.split(" ")[1], API_KEY); // แยก 'Bearer' ออกจากโทเค็น
         req.user = decoded; // บันทึกข้อมูลผู้ใช้ลงใน request
         next();
     } catch (err) {

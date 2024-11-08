@@ -7,11 +7,12 @@ const staffRoutes = require('./routes/staffRoom.routes');
 const approverRoutes = require('./routes/approverBooking.routes');
 const authRoutes = require('./routes/auth.routes');
 const roomRoutes = require('./routes/rooms.routes');
+require('dotenv').config()
 
 app.use(cors()); 
 app.use(express.json());
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // เส้นทางแสดงรูปภาพที่อัปโหลด
 app.use('/public', express.static('public'));
