@@ -19,7 +19,7 @@ app.use('/public', express.static('public'));
 
 // ตั้งค่า Routes
 app.use('/room', roomRoutes);
-app.use('/user', userRoutes);
+// app.use('/user', userRoutes);
 app.use('/student', studentRoutes);
 app.use('/staff', staffRoutes);
 app.use('/approver', approverRoutes);
