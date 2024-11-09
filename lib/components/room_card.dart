@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/time_slot.dart';
+import 'package:pro_mobile/services/api_service.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 import 'package:pro_mobile/views/student/booking_form_page.dart';
 
 class RoomCard extends StatefulWidget {
-  final String role,
-      roomId,
-      roomName,
-      desc,
-      img,
-      slot_1,
-      slot_2,
-      slot_3,
-      slot_4;
+  final String role, roomName, desc, img, slot_1, slot_2, slot_3, slot_4;
+  final int roomId;
 
   const RoomCard(
       {super.key,
@@ -36,6 +30,8 @@ class _RoomCardState extends State<RoomCard> {
     Colors.black,
     Icon(Icons.bookmark_add_outlined)
   ];
+
+  final baseUrl = ApiService().getServerUrl();
 
   void bookmark() {
     // api
@@ -74,8 +70,8 @@ class _RoomCardState extends State<RoomCard> {
                       borderRadius:
                           BorderRadius.only(bottomRight: Radius.circular(16)),
                     ),
-                    child: Image.asset(
-                      "assets/rooms/${widget.img}", // เปลี่ยนตรงนี้ให้ใช้ widget.img
+                    child: Image.network(
+                      "http://$baseUrl/public/rooms/${widget.img}", // เปลี่ยนตรงนี้ให้ใช้ widget.img
                       fit: BoxFit.cover,
                       height: 165,
                     ),

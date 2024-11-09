@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/services/auth_service.dart';
 import 'package:pro_mobile/views/auth/login_page.dart';
@@ -13,7 +15,8 @@ class _RegisterState extends State<Register> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   final AuthService authService = AuthService(); // สร้างตัวแปร AuthService
 
@@ -25,21 +28,6 @@ class _RegisterState extends State<Register> {
     String password = passwordController.text.trim();
     String confirmPassword = confirmPasswordController.text.trim();
 
-    // ตรวจสอบอีเมลและกำหนด role
-    if (email.endsWith('student@lamduan.mfu.ac.th')) {
-      role = 'student';
-    } else if (email.endsWith('staff@lamduan.mfu.ac.th')) {
-      role = 'staff';
-    } else if (email.endsWith('approver@lamduan.mfu.ac.th')) {
-      role = 'approver';
-    } else {
-      // แสดงข้อความแจ้งเตือนถ้าอีเมลไม่ถูกต้อง
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid email domain')),
-      );
-      return;
-    }
-
     // ตรวจสอบความถูกต้องของรหัสผ่าน
     if (password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -49,23 +37,29 @@ class _RegisterState extends State<Register> {
     }
 
     try {
-      // เรียกใช้งานฟังก์ชันการลงทะเบียน
-      final response = await authService.register(username, email, password);
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response['message']), // แสดงข้อความจาก response
-          duration: const Duration(seconds: 2),
-        ),
-      );
-
-      // นำทางไปยังหน้า Login หลังจากลงทะเบียนสำเร็จ
-      Future.delayed(const Duration(seconds: 2), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Login()),
+      //     // เรียกใช้งานฟังก์ชันการลงทะเบียน
+      final response =
+          await AuthService().register(username, password, email).timeout(
+                const Duration(seconds: 10),
+              );
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        Map<String, dynamic> res = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(res['message']), // แสดงข้อความจาก response
+            duration: const Duration(seconds: 2),
+          ),
         );
-      });
+        // นำทางไปยังหน้า Login หลังจากลงทะเบียนสำเร็จ
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const Login()),
+          );
+        });
+      } else {
+        throw Exception(jsonDecode(response.body)['message']);
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Registration failed: ${e.toString()}')),

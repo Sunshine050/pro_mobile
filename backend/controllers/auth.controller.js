@@ -8,11 +8,7 @@ API_KEY = process.env.API_KEY || "my-secret-key";
 
 // Register
 exports.register = async (req, res) => {
-    const { username, password, email, confirm_password } = req.body;
-
-    if (password != confirm_password) {
-        res.status(401).send('Password does not match. Please try again.');
-    }
+    const { username, password, email } = req.body;
 
     // แฮชรหัสผ่านก่อนบันทึก
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -31,7 +27,7 @@ exports.register = async (req, res) => {
             return res.status(409).json({ message: 'Username already exists' });
         }
         await User.create(newUser);
-        return res.status(201).send('Register successfully');
+        return res.status(201).json({ message: 'Register successfully'});
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Register failed' });

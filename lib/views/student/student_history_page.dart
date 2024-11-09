@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pro_mobile/components/tabsBar.dart';
 
 class History extends StatefulWidget {
   const History({super.key});
@@ -129,8 +128,7 @@ class _HistoryState extends State<History> {
                             ),
                           ],
                         ),
-                ),
-                TabsbarNavigator(role: "student")
+                )
               ],
             )
           : Column(
@@ -290,8 +288,7 @@ class _HistoryState extends State<History> {
                       );
                     },
                   ),
-                ),
-                TabsbarNavigator(role: "student")
+                )
               ],
             ),
     );

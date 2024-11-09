@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pro_mobile/components/tabsBar.dart';
 
 class HistoryLec extends StatefulWidget {
   const HistoryLec({super.key});
@@ -275,8 +274,7 @@ class _HistoryLecState extends State<HistoryLec> {
                       );
                     },
                   ),
-                ),
-                TabsbarNavigator(role: "approver")
+                )
               ],
             ),
     );

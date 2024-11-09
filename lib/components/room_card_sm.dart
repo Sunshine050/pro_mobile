@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pro_mobile/services/api_service.dart';
 import 'package:pro_mobile/views/student/booking_form_page.dart';
 
 class RoomCardSm extends StatefulWidget {
-  final String roomId, roomName, img, slot_1, slot_2, slot_3, slot_4;
+  final String roomName, img, slot_1, slot_2, slot_3, slot_4;
+  final int roomId;
 
   const RoomCardSm(
       {super.key,
@@ -24,6 +26,8 @@ class _RoomCardSmState extends State<RoomCardSm> {
     Color.fromARGB(255, 255, 193, 7),
     Icons.bookmark_added_rounded
   ];
+
+  final baseUrl = ApiService().getServerUrl();
 
   void bookmark() {
     // api
@@ -54,8 +58,8 @@ class _RoomCardSmState extends State<RoomCardSm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-            child: Image.asset(
-              widget.img,
+            child: Image.network(
+              "http://$baseUrl/public/rooms/${widget.img}",
               fit: BoxFit.fitHeight,
               width: 180,
             ),
