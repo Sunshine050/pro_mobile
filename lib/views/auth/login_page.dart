@@ -59,8 +59,7 @@ class _LoginState extends State<Login> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      StudentRoute(userId: payload['userId'].toString()),
+                  builder: (context) => StudentRoute(userId: payload['userId']),
                 ),
               );
               break;
@@ -69,7 +68,7 @@ class _LoginState extends State<Login> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      ApproverRoute(userId: payload['userId'].toString()),
+                      ApproverRoute(userId: payload['userId']),
                 ),
               );
               break;
@@ -77,8 +76,7 @@ class _LoginState extends State<Login> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      StaffRoute(userId: payload['userId'].toString()),
+                  builder: (context) => StaffRoute(userId: payload['userId']),
                 ),
               );
               break;

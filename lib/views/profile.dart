@@ -7,7 +7,8 @@ import 'package:pro_mobile/services/rooms_service.dart';
 import 'package:pro_mobile/views/homepage.dart';
 
 class Profile extends StatefulWidget {
-  final String userId, role;
+  final String role;
+  final int userId;
   const Profile({super.key, required this.userId, required this.role});
 
   @override

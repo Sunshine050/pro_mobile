@@ -5,7 +5,7 @@ import 'package:pro_mobile/views/staff/staff_dashboard.dart';
 import 'package:pro_mobile/views/staff/staff_history_page.dart';
 
 class StaffRoute extends StatefulWidget {
-  final String userId;
+  final int userId;
   const StaffRoute({super.key, required this.userId});
 
   @override

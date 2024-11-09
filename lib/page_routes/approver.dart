@@ -6,7 +6,7 @@ import 'package:pro_mobile/views/browse.dart';
 import 'package:pro_mobile/views/profile.dart';
 
 class ApproverRoute extends StatefulWidget {
-  final String userId;
+  final int userId;
   const ApproverRoute({super.key, required this.userId});
 
   @override

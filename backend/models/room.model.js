@@ -46,12 +46,18 @@ const Room = {
     },
     filterRoom: (slots, callback) => {
         let conditions;
+        console.log(slots);
+
         if (slots.includes("any")) {
             conditions = 'slot_1 = "free" or slot_2 = "free" or slot_3 = "free" or slot_4 = "free"'
         } else {
-            conditions = slots.map(slot => "? = \'free\'").join(' AND ');
+            conditions = slots.reduce((acc, curr) => `${acc}${acc ? ' and ' : ''}${curr} = 'free'`, '');
         }
+        console.log(conditions);
+
         const sql = `SELECT * FROM rooms WHERE ${conditions}`;
+        console.log(sql);
+
         // console.log(sql);
         db.query(sql, slots, callback);
     },

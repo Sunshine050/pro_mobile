@@ -5,7 +5,7 @@ import 'package:pro_mobile/views/student/booking_status_page.dart';
 import 'package:pro_mobile/views/student/student_history_page.dart';
 
 class StudentRoute extends StatefulWidget {
-  final String userId;
+  final int userId;
   const StudentRoute({super.key, required this.userId});
 
   @override

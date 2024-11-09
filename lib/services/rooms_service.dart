@@ -21,9 +21,10 @@ class RoomsService extends ApiService {
   }
 
   // filter by available slots
-  Future<http.Response> filterRoom(List filterOptions) async {
+  Future<http.Response> filterRoom(Map<String, dynamic> filterOptions) async {
+    print(filterOptions);
     final response =
-        await ApiService().postReq('/filter', {'slots': filterOptions}, true);
+        await ApiService().postReq('/room/filter', filterOptions, true);
     return response;
   }
 }
