@@ -76,8 +76,6 @@ const Room = {
         ];
         console.log(updateValues);
         db.query(updateQuery, updateValues, callback);
-        // const query = 'UPDATE rooms SET `room_name` = ?, `desc` = ?, `slot_1` = ?, `slot_2` = ?, `slot_3` = ?, `slot_4` = ?, `image` WHERE id = ?';
-        // db.query(query, [roomData.room_name, roomData.description, roomData.slot_1, roomData.slot_2, roomData.slot_3, roomData.slot_4, roomData.image, roomId], callback);
     },
     delete: (roomId, callback) => {
         const query = 'DELETE FROM rooms WHERE id = ?';

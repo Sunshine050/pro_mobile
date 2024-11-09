@@ -28,7 +28,7 @@ class _RoomCardState extends State<RoomCard> {
   List<dynamic> bookmarkedState = [
     false,
     Colors.black,
-    Icon(Icons.bookmark_add_outlined)
+    const Icon(Icons.bookmark_add_outlined)
   ];
 
   final baseUrl = ApiService().getServerUrl();
@@ -40,18 +40,18 @@ class _RoomCardState extends State<RoomCard> {
       if (bookmarkedState[0] == false) {
         bookmarkedState[0] = true;
         bookmarkedState[1] = const Color.fromARGB(255, 255, 193, 7);
-        bookmarkedState[2] = Icon(Icons.bookmark_added_rounded);
+        bookmarkedState[2] = const Icon(Icons.bookmark_added_rounded);
       } else {
         bookmarkedState[0] = false;
         bookmarkedState[1] = Colors.black;
-        bookmarkedState[2] = Icon(Icons.bookmark_add_outlined);
+        bookmarkedState[2] = const Icon(Icons.bookmark_add_outlined);
       }
     });
   }
 
-  // if all slot are "reserved" or "disable" => disable btn
+  // if all slot are not free => disable btn
   bool isAvailable(List<String> slotStatus) {
-    return slotStatus.any((status) => status == 'free' || status == "pending");
+    return slotStatus.any((status) => status == 'free');
   }
 
   @override
