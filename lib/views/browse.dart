@@ -166,7 +166,7 @@ class _BrowseState extends State<Browse> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 24),
                         child: RoomCard(
-                          role: 'student',
+                          role: 'staff',
                           roomId: itemData?['id'],
                           roomName: itemData?['room_name'],
                           desc: itemData?['desc'],

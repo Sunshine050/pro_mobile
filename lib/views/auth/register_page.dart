@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/services/auth_service.dart';
 import 'package:pro_mobile/views/auth/login_page.dart';
@@ -20,8 +19,7 @@ class _RegisterState extends State<Register> {
 
   final AuthService authService = AuthService(); // สร้างตัวแปร AuthService
 
-  String? role; // สร้างตัวแปรเพื่อเก็บ role
-
+  // ฟังก์ชันการลงทะเบียน
   void _register() async {
     String email = emailController.text.trim();
     String username = usernameController.text.trim();
@@ -37,11 +35,13 @@ class _RegisterState extends State<Register> {
     }
 
     try {
-      //     // เรียกใช้งานฟังก์ชันการลงทะเบียน
+      // เรียกใช้งานฟังก์ชันการลงทะเบียน
       final response =
-          await AuthService().register(username, password, email).timeout(
+          await authService.register(username, email, password).timeout(
                 const Duration(seconds: 10),
               );
+
+      // ตรวจสอบการตอบกลับจาก API
       if (response.statusCode >= 200 && response.statusCode < 300) {
         Map<String, dynamic> res = jsonDecode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
@@ -87,40 +87,20 @@ class _RegisterState extends State<Register> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
-              TextField(
-                controller: emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
+              // ฟอร์มกรอกข้อมูล
+              _buildTextField(
+                  emailController, 'Email', TextInputType.emailAddress),
               const SizedBox(height: 16),
-              TextField(
-                controller: usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
-                ),
-              ),
+              _buildTextField(
+                  usernameController, 'Username', TextInputType.text),
               const SizedBox(height: 16),
-              TextField(
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
-              ),
+              _buildTextField(
+                  passwordController, 'Password', TextInputType.text,
+                  obscureText: true),
               const SizedBox(height: 16),
-              TextField(
-                controller: confirmPasswordController,
-                decoration: const InputDecoration(
-                  labelText: 'Confirm Password',
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
-              ),
+              _buildTextField(confirmPasswordController, 'Confirm Password',
+                  TextInputType.text,
+                  obscureText: true),
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: _register,
@@ -153,6 +133,21 @@ class _RegisterState extends State<Register> {
           ),
         ),
       ),
+    );
+  }
+
+  // สร้างฟังก์ชัน TextField เพื่อทำให้โค้ดสะดวกในการใช้งาน
+  Widget _buildTextField(TextEditingController controller, String label,
+      TextInputType keyboardType,
+      {bool obscureText = false}) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+      ),
+      keyboardType: keyboardType,
+      obscureText: obscureText,
     );
   }
 }

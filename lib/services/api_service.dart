@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String _baseUrl = '172.22.160.1:3000';
+  static const String _baseUrl = '192.168.167.205:3000';
 
   String getServerUrl() {
     return _baseUrl;

@@ -1,13 +1,13 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const userRoutes = require('./routes/userRoute');
+const userRoutes = require('./routes/user.routes'); // แก้ชื่อไฟล์ให้ตรงกับที่มีในโฟลเดอร์
 const studentRoutes = require('./routes/studentBooking.routes');
 const staffRoutes = require('./routes/staffRoom.routes');
 const approverRoutes = require('./routes/approverBooking.routes');
 const authRoutes = require('./routes/auth.routes');
 const roomRoutes = require('./routes/rooms.routes');
-require('dotenv').config()
+require('dotenv').config();
 
 app.use(cors()); 
 app.use(express.json());
@@ -16,10 +16,11 @@ const port = process.env.PORT || 3000;
 
 // เส้นทางแสดงรูปภาพที่อัปโหลด
 app.use('/public', express.static('public'));
+// app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // ตั้งค่า Routes
 app.use('/room', roomRoutes);
-// app.use('/user', userRoutes);
+app.use('/user', userRoutes);
 app.use('/student', studentRoutes);
 app.use('/staff', staffRoutes);
 app.use('/approver', approverRoutes);
