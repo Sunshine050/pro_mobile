@@ -1,5 +1,8 @@
+const db = require('../config/db.config');
 const Booking = require('../models/booking.model');
 const Room = require('../models/room.model');
+// ลบการนำเข้าฟังก์ชัน cancel จาก '../models/booking.model' ออก
+// const { cancel } = require('../models/booking.model'); // ลบบรรทัดนี้
 
 const bookRoom = (req, res) => {
   const { room_id, slot, reason } = req.body;
@@ -43,24 +46,41 @@ const bookRoom = (req, res) => {
   });
 };
 
+//------------------------------------------------------------------------------------//
 
 const getBookings = (req, res) => {
   const { userId } = req.user;
-
-  // ตรวจสอบว่า user_id ถูกส่งมาหรือไม่
   if (!userId) {
     return res.status(400).send('User ID is required');
   }
 
-  Booking.getPending(userId, (err, bookings) => {
+  // ใช้ SQL JOIN เพื่อดึงข้อมูลทั้งจาก bookings และ rooms
+  const query = `
+    SELECT bookings.id, bookings.user_id, bookings.room_id, bookings.slot, bookings.status, 
+           bookings.booking_date, bookings.reason, rooms.room_name
+    FROM bookings
+    JOIN rooms ON bookings.room_id = rooms.id
+    WHERE bookings.user_id = ? AND bookings.status = "pending"
+  `;
+
+  // ใช้ db.query เพื่อดึงข้อมูลจากฐานข้อมูล
+  db.query(query, [userId], (err, results) => {
     if (err) {
-      console.error("Error fetching bookings:", err);
+      console.error('Error fetching bookings:', err);
       return res.status(500).send('Error fetching bookings');
     }
-    res.status(200).json(bookings);
+
+    // ถ้าไม่พบการจอง
+    if (results.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    // ส่งข้อมูลการจอง
+    res.status(200).json(results);
   });
 };
 
+//------------------------------------------------------------------------------------//
 const getBookmarked = (req, res) => {
   const { userId } = req.user;
   try {
@@ -76,6 +96,7 @@ const getBookmarked = (req, res) => {
   }
 
 }
+//------------------------------------------------------------------------------------//
 
 const bookmarked = (req, res) => {
   const { room_id } = req.body;
@@ -90,6 +111,8 @@ const bookmarked = (req, res) => {
   });
 }
 
+//------------------------------------------------------------------------------------//
+
 const unbookmarked = (req, res) => {
   const { room_id } = req.body;
   const { userId } = req.user;
@@ -103,22 +126,27 @@ const unbookmarked = (req, res) => {
   });
 }
 
+//------------------------------------------------------------------------------------//
+
 const cancel = (req, res) => {
-  const { booking_id } = req.body;
+  const { booking_id } = req.params; // ใช้ params แทน body
 
   Booking.cancelRequest(booking_id, (err, result) => {
     if (err) {
       console.error("Error canceling booking:", err);
       return res.status(500).send('Internal server error');
     }
-    res.send("canceled");
+    res.send("canceled"); // ส่งการยืนยันว่าได้ยกเลิกการจอง
   });
-}
+};
+
+
+//------------------------------------------------------------------------------------//
 
 // Export functions
 module.exports = {
   bookRoom,
-  cancel,
+  cancel,  // export ฟังก์ชัน cancel จากที่ประกาศใหม่
   getBookings,
   getBookmarked,
   bookmarked,

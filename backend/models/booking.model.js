@@ -124,8 +124,8 @@ const Booking = {
   },
 
   cancelRequest: (bookingId, callback) => {
-    db.query("UPDATE `bookings` SET `status` = 'cancel' WHERE `bookings`.`id` = ? ", [bookingId], callback);
-  },
+    db.query("UPDATE `bookings` SET `status` = 'cancel' WHERE `id` = ?", [bookingId], callback);
+  },  
 
   getAllBooking: (userId, role, callback) => {
     let query;

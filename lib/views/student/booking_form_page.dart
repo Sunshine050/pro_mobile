@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/components/message_dialog.dart';
 import 'package:pro_mobile/components/time_slot_radio.dart';
@@ -118,10 +117,10 @@ class _BookingState extends State<Booking> {
     print('Slot: $_selectedSlot');
     print('Reason: ${_reasonController.text}');
 
-// ส่งข้อมูลการจองไปยัง API
+    // ส่งข้อมูลการจองไปยัง API
     http
         .post(
-      Uri.parse('http://192.168.167.205:3000/student/book'),
+      Uri.parse('http://192.168.206.1:3000/student/book'),
       headers: {
         'Authorization': 'Bearer ${widget.token}',
         'Content-Type':
@@ -149,7 +148,9 @@ class _BookingState extends State<Booking> {
             return MessageDialog(
               content: 'Room reserved successfully!',
               onConfirm: () {
-                Navigator.of(context).pop();
+                // ไปที่หน้า Home ทันทีเมื่อสำเร็จ
+                Navigator.pop(context); // ปิด dialog
+                Navigator.pop(context); // กลับไปยังหน้า Home
               },
               messageType: 'success',
             );
@@ -350,7 +351,7 @@ class _BookingState extends State<Booking> {
                                           : null,
                                     ),
                                     TimeSlotRadio(
-                                      time: "12:00 - 14:00",
+                                      time: "13:00 - 15:00",
                                       status: roomData["slot_3"],
                                     ),
                                   ],
@@ -380,7 +381,7 @@ class _BookingState extends State<Booking> {
                                           : null,
                                     ),
                                     TimeSlotRadio(
-                                      time: "14:00 - 16:00",
+                                      time: "15:00 - 17:00",
                                       status: roomData["slot_4"],
                                     ),
                                   ],
@@ -391,24 +392,27 @@ class _BookingState extends State<Booking> {
                         ],
                       ),
                       const SizedBox(
-                        height: 16,
+                        height: 8,
                       ),
-                      TextField(
+                      // reason input
+                      TextFormField(
                         controller: _reasonController,
-                        decoration: InputDecoration(
-                          hintText: "Please enter a reason",
-                          labelText: "Reason",
-                          border: const OutlineInputBorder(),
+                        decoration: const InputDecoration(
+                          hintText: 'Reason for booking',
+                          border: OutlineInputBorder(),
                         ),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      ElevatedButton(
+                        onPressed: submit,
+                        child: const Text("Submit"),
                       ),
                     ],
                   ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: submit,
-                child: const Text("Submit"),
-              )
             ],
           ),
         ),

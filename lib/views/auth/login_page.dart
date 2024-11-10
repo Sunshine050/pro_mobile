@@ -19,7 +19,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final String host = "192.168.167.205";
+  final String host = "192.168.206.1";
   final String port = "3000";
   String get url => "$host:$port"; // dunno what "get" is, so don't touch it :)
   final TextEditingController _usernameController = TextEditingController();
