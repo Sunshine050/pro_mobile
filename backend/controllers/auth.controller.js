@@ -52,7 +52,7 @@ exports.login = async (req, res) => {
     }
 
     // สร้าง token พร้อมข้อมูลบทบาทและ Object ID
-    const token = jwt.sign({ userId: user.id, username: user.username, role: user.role }, API_KEY, { expiresIn: '7d' });
+    const token = jwt.sign({ userId: user.id, username: user.username, role: user.role }, API_KEY, { expiresIn: '14d' });
 
     // ส่ง token และ userId กลับไปใน response
     return res.status(200).json({ token });

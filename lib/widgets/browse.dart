@@ -7,8 +7,6 @@ import '../components/search_btn.dart';
 class Browse extends StatefulWidget {
   const Browse({super.key, required String role});
 
-  get role => null;
-
   @override
   State<Browse> createState() => _BrowseState();
 }
@@ -127,7 +125,7 @@ class _BrowseState extends State<Browse> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: RoomCard(
-                          role: widget.role,
+                          role: itemData?['role'],
                           roomId: itemData?['roomId'],
                           roomName: itemData?['roomName'],
                           desc: itemData?['desc'],

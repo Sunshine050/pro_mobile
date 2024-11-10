@@ -117,8 +117,10 @@ class _RoomCardSmState extends State<RoomCardSm> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      Booking(roomId: widget.roomId)),
+                                  builder: (context) => Booking(
+                                        roomId: widget.roomId,
+                                        token: '',
+                                      )),
                             )
                           }
                       : null,

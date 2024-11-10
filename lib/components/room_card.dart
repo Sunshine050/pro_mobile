@@ -3,6 +3,7 @@ import 'package:pro_mobile/components/time_slot.dart';
 import 'package:pro_mobile/services/api_service.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 import 'package:pro_mobile/views/student/booking_form_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RoomCard extends StatefulWidget {
   final String role, roomName, desc, img, slot_1, slot_2, slot_3, slot_4;
@@ -34,8 +35,6 @@ class _RoomCardState extends State<RoomCard> {
   final baseUrl = ApiService().getServerUrl();
 
   void bookmark() {
-    // api
-
     setState(() {
       if (bookmarkedState[0] == false) {
         bookmarkedState[0] = true;
@@ -52,6 +51,13 @@ class _RoomCardState extends State<RoomCard> {
   // if all slot are not free => disable btn
   bool isAvailable(List<String> slotStatus) {
     return slotStatus.any((status) => status == 'free');
+  }
+
+  // Function to get token from SharedPreferences
+  Future<String> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token') ??
+        ''; // ถ้าไม่มี token ให้คืนค่าเป็นค่าว่าง
   }
 
   @override
@@ -160,15 +166,20 @@ class _RoomCardState extends State<RoomCard> {
                                 widget.slot_3,
                                 widget.slot_4
                               ])
-                                  ? () => {
-                                        // to booking page
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => Booking(
-                                                  roomId: widget.roomId)),
-                                        )
-                                      }
+                                  ? () async {
+                                      String token =
+                                          await getToken(); // ดึง token จากที่เก็บข้อมูล
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Booking(
+                                            roomId: widget.roomId,
+                                            token:
+                                                token, // ส่ง token ที่ดึงมาให้กับ Booking
+                                          ),
+                                        ),
+                                      );
+                                    }
                                   : null,
                               child: const Text("Reserve this room",
                                   style: TextStyle(

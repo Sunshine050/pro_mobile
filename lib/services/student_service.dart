@@ -3,10 +3,19 @@ import 'package:pro_mobile/services/api_service.dart';
 
 class StudentService extends ApiService {
   // book a room
-  Future<http.Response> bookRoom(Map<String, dynamic> bookingData) async {
-    final response =
-        await ApiService().postReq("/student/book", bookingData, true);
-    return response;
+  // ignore: non_constant_identifier_names
+  Future<http.Response> Booking(Map<String, dynamic> roomId) async {
+    if (roomId.isEmpty) {
+      throw Exception("Booking data cannot be empty");
+    }
+
+    final response = await this.postReq("/student/book", roomId,
+        true); // ใช้ this.postReq แทน ApiService().postReq
+    if (response.statusCode == 200) {
+      return response;
+    } else {
+      throw Exception('Failed to reserve the room. Please try again later.');
+    }
   }
 
   // cancel req
