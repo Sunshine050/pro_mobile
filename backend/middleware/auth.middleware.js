@@ -2,11 +2,12 @@ const jwt = require('jsonwebtoken');
 const blacklistModel = require('../models/blacklist.model');
 require('dotenv').config();
 
-const API_KEY = process.env.API_KEY || "my-secret-key"; // อ่านจาก environment variable หรือใช้ค่า default
+const API_KEY = process.env.API_KEY || "my-secret-key"; 
+
+//-------------------------------------------------------------------//
 
 // Middleware to verify token
 exports.verifyToken = async (req, res, next) => {
-    // ดึง token จาก headers
     const token = req.headers['authorization'];
 
     // ตรวจสอบว่า token มีหรือไม่
@@ -15,7 +16,7 @@ exports.verifyToken = async (req, res, next) => {
     }
 
     try {
-        const tokenValue = token.split(" ")[1]; // แยก 'Bearer' ออกจาก token
+        const tokenValue = token.split(" ")[1]; 
 
         // ตรวจสอบว่า token ถูกระงับหรือไม่
         const isRevoked = await blacklistModel.isRevoked(tokenValue);
@@ -24,13 +25,15 @@ exports.verifyToken = async (req, res, next) => {
         }
 
         // ตรวจสอบ token ด้วย secret key
-        const decoded = jwt.verify(tokenValue, API_KEY); // ใช้ API_KEY หรือ secret key ของคุณ
+        const decoded = jwt.verify(tokenValue, API_KEY); 
         req.user = decoded; // บันทึกข้อมูลผู้ใช้ลงใน request
 
-        next(); // ดำเนินการต่อไป
+        next(); 
     } catch (err) {
         // หากเกิดข้อผิดพลาดในการตรวจสอบ token
-        console.error('Token verification error:', err); // บันทึกข้อผิดพลาด
+        console.error('Token verification error:', err); 
         return res.status(401).send('Invalid Token');
     }
 };
+
+//-------------------------------------------------------------------//

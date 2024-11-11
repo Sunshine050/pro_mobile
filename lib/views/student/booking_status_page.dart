@@ -9,14 +9,14 @@ class BookingStatus extends StatefulWidget {
 }
 
 class _BookingStatusPageState extends State<BookingStatus> {
-  String status = 'loading'; // เปลี่ยนสถานะเริ่มต้นเป็น 'loading' ก่อนดึงข้อมูล
+  String status = 'loading'; 
   List<dynamic> bookings = [];
   List<int> canceledBookings = []; // ใช้เก็บ ID ของการจองที่ยกเลิกแล้ว
 
   @override
   void initState() {
     super.initState();
-    _getBookings(); // เรียกฟังก์ชันดึงข้อมูลเมื่อเริ่มต้น
+    _getBookings(); 
   }
 
   // ฟังก์ชันในการดึง token จาก local storage
@@ -32,7 +32,7 @@ class _BookingStatusPageState extends State<BookingStatus> {
     // ถ้าไม่มี token ให้แสดงข้อความเตือนหรือทำการล็อกอินใหม่
     if (token == null) {
       setState(() {
-        status = 'error'; // แสดงข้อผิดพลาดหากไม่มี token
+        status = 'error'; 
       });
       return;
     }
@@ -60,7 +60,7 @@ class _BookingStatusPageState extends State<BookingStatus> {
       });
     }
   }
-
+//------------------------------------------------------------//
   // ฟังก์ชันยกเลิกการจอง
   Future<void> _cancelBooking(int bookingId) async {
     String? token = await getTokenFromStorage();
@@ -68,13 +68,13 @@ class _BookingStatusPageState extends State<BookingStatus> {
 
     final response = await http.put(
       Uri.parse(
-          'http://192.168.206.1:3000/student/cancel/$bookingId'), // เปลี่ยนคำว่า 'cancle' เป็น 'cancel'
+          'http://192.168.206.1:3000/student/cancel/$bookingId'), 
       headers: {
         'Authorization': 'Bearer $token', // ส่ง token ใน header
       },
     );
 
-    // พิมพ์สถานะการตอบกลับและข้อมูลจาก API
+    //check err message
     print("Cancel Booking Response Status: ${response.statusCode}");
     print("Cancel Booking Response Body: ${response.body}");
 
@@ -88,11 +88,10 @@ class _BookingStatusPageState extends State<BookingStatus> {
         }
       });
     } else {
-      // เพิ่มการพิมพ์สำหรับข้อผิดพลาดต่าง ๆ ที่เกิดขึ้น
       print(
           "Error: Unable to cancel booking. Status code: ${response.statusCode}");
       setState(() {
-        status = 'error'; // ถ้ามีข้อผิดพลาดในการยกเลิกการจอง
+        status = 'error'; 
       });
     }
   }
@@ -119,7 +118,7 @@ class _BookingStatusPageState extends State<BookingStatus> {
       ),
     );
   }
-
+//-----------------------------------------------------------//
   // หน้าจอเมื่อสถานะเป็น 'pending'
   Widget _buildPendingContent() {
     return ListView.builder(
@@ -193,7 +192,7 @@ class _BookingStatusPageState extends State<BookingStatus> {
       },
     );
   }
-
+//-------------------------------------------------------------------//
   // ฟังก์ชันแสดง dialog ยืนยันการยกเลิก
   void _showCancelConfirmationDialog(BuildContext context, int bookingId) {
     showDialog(
@@ -249,7 +248,7 @@ class _BookingStatusPageState extends State<BookingStatus> {
       },
     );
   }
-
+//-------------------------------------------------------------------//
   // หน้าจอเมื่อสถานะเป็น 'blank'
   Widget _buildBlankStatus() {
     return Column(

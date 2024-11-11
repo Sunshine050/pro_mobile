@@ -1,5 +1,5 @@
 const db = require('../config/db.config');
-
+//-------------------------------------------------------------------//
 const Blacklist = {
     addToken: (token, expiresAt) => {
         return new Promise((resolve, reject) => {
@@ -18,5 +18,8 @@ const Blacklist = {
         });
     }
 };
+//-------------------------------------------------------------------//
 
 module.exports = Blacklist;
+
+//-------------------------------------------------------------------//

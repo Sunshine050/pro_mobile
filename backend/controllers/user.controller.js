@@ -1,7 +1,7 @@
 const Booking = require('../models/booking.model');
 const Room = require('../models/room.model');
 const User = require('../models/user.model');
-
+//-------------------------------------------------------------------//
 const userData = async (req, res) => {
     const { userId } = req.user;
 
@@ -12,7 +12,7 @@ const userData = async (req, res) => {
         res.status(500).send('Internal server error');
     }
 }
-
+//-------------------------------------------------------------------//
 const history = async (req, res) => {
     const { userId, role } = req.user;
 
@@ -25,7 +25,7 @@ const history = async (req, res) => {
         res.status(500).send('Internal server error');
     }
 }
-
+//-------------------------------------------------------------------//
 // data for dashboard
 const summary = async (req, res) => {
     const { role } = req.user;
@@ -44,9 +44,10 @@ const summary = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 };
-
+//-------------------------------------------------------------------//
 module.exports = {
     userData,
     history,
     summary // data for dashboard
 }
+//-------------------------------------------------------------------//

@@ -3,24 +3,21 @@ const Booking = require('../models/booking.model');
 const multer = require('multer');
 const EventEmitter = require('events');
 
-// ตั้งค่าจำนวนสูงสุดของ listeners ที่อนุญาต
-EventEmitter.defaultMaxListeners = 20; // ปรับตามต้องการ
-
-// ตั้งค่า multer สำหรับการจัดเก็บไฟล์
+//-------------------------------------------------------------------//
+EventEmitter.defaultMaxListeners = 20; 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/rooms/'); // เก็บไฟล์ที่โฟลเดอร์ uploads
+    cb(null, 'public/rooms/'); 
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname); // ตั้งชื่อไฟล์ให้ไม่ซ้ำ
+    cb(null, Date.now() + '-' + file.originalname); 
   },
 });
 
 const upload = multer({ storage: storage });
-
+//-------------------------------------------------------------------//
 // ฟังก์ชันสำหรับการสร้างห้องพร้อมการอัปโหลดรูปภาพ
 const createRoom = (req, res) => {
-  // ตรวจสอบว่ามีการอัปโหลดไฟล์หรือไม่
   if (!req.file) {
     return res.status(400).send('Please upload an image');
   }
@@ -28,7 +25,7 @@ const createRoom = (req, res) => {
   // สร้างข้อมูลห้องพร้อมกับ image_url ที่อัปโหลด
   const roomData = {
     ...req.body,
-    image: `${req.file.filename}`, // เก็บ URL ของรูปภาพ
+    image: `${req.file.filename}`, 
   };
 
   Room.create(roomData, (err, result) => {
@@ -39,17 +36,17 @@ const createRoom = (req, res) => {
 
     res.status(201).json({ 
       message: 'Room created successfully', 
-      // roomId: result.insertId
     });
   });
 };
+//-------------------------------------------------------------------//
 
 // ฟังก์ชันสำหรับการอัปเดตข้อมูลห้อง
 const updateRoom = (req, res) => {
   const { roomId } = req.params;
   let roomData = { ...req.body };
   
-  if (req.file) { roomData.image = req.file.filename } // if upload new image
+  if (req.file) { roomData.image = req.file.filename } 
 
   console.log(req.body);
   Room.update(roomId, roomData, (err) => {
@@ -58,9 +55,13 @@ const updateRoom = (req, res) => {
   });
 };
 
+//-------------------------------------------------------------------//
+
 // ส่งออกฟังก์ชันทั้งหมด
 module.exports = {
   createRoom,
   updateRoom,
   upload,
 };
+
+//-------------------------------------------------------------------//

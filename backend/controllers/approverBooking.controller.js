@@ -1,5 +1,7 @@
 const Booking = require('../models/booking.model');
 
+//-------------------------------------------------------------------//
+
 // ดึงคำขอการจองทั้งหมดที่สถานะเป็น "pending"
 const getAllBookingRequests = (req, res) => {
   Booking.getAllRequests((err, bookings) => {
@@ -9,6 +11,8 @@ const getAllBookingRequests = (req, res) => {
     res.json(bookings);
   });
 };
+
+//-------------------------------------------------------------------//
 
 // ดึงคำขอการจองตาม ID
 const getBookingRequestById = (req, res) => {
@@ -21,6 +25,8 @@ const getBookingRequestById = (req, res) => {
   });
 };
 
+//-------------------------------------------------------------------//
+
 // อนุมัติการจอง
 const approveBooking = (req, res) => {
   const { bookingId, approverId } = req.body;
@@ -32,7 +38,8 @@ const approveBooking = (req, res) => {
   });
 };
 
-// ปฏิเสธการจอง
+//-------------------------------------------------------------------//
+// ปิดการอนุมัติการจอง
 const rejectBooking = (req, res) => {
   const { bookingId, approverId } = req.body;
   Booking.updateStatus(bookingId, 'rejected', approverId, (err) => {
@@ -43,6 +50,8 @@ const rejectBooking = (req, res) => {
   });
 };
 
+//-------------------------------------------------------------------//
+
 // ส่งออกฟังก์ชันทั้งหมด
 module.exports = {
   getAllBookingRequests,
@@ -50,3 +59,5 @@ module.exports = {
   approveBooking,
   rejectBooking,
 };
+
+//-------------------------------------------------------------------//

@@ -5,21 +5,17 @@ const User = require('../models/user.model');
 require('dotenv').config();
 
 API_KEY = process.env.API_KEY || "my-secret-key";
-
+//-------------------------------------------------------------------//
 // Register
 exports.register = async (req, res) => {
     const { username, password, email } = req.body;
-
     // แฮชรหัสผ่านก่อนบันทึก
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // บันทึกข้อมูลผู้ใช้ลงฐานข้อมูล
     const newUser = {
         username,
         password: hashedPassword,
         email,
     };
-
     try {
         // บันทึกผู้ใช้ใหม่ลงฐานข้อมูล
         const isDuplicate = await User.findByUsername(username);
@@ -34,17 +30,16 @@ exports.register = async (req, res) => {
     }
 };
 
+//-------------------------------------------------------------------//
+
 // Login
 exports.login = async (req, res) => {
     const { username, password } = req.body;
-
     // ตรวจสอบผู้ใช้ในฐานข้อมูล
-    const user = await User.findByUsername(username); // สมมติว่ามีฟังก์ชันนี้
-
+    const user = await User.findByUsername(username); 
     if (!user) {
         return res.status(404).json({ message: 'User not found' });
     }
-
     // ตรวจสอบรหัสผ่าน
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
@@ -56,9 +51,9 @@ exports.login = async (req, res) => {
 
     // ส่ง token และ userId กลับไปใน response
     return res.status(200).json({ token });
-    // ส่ง message, token, และ userId กลับไปใน response
-    // return res.status(200).json({ message: 'Login successfully', token, userId: user._id });
 };
+
+//-------------------------------------------------------------------//
 
 // Logout
 exports.logout = async (req, res) => {
@@ -68,16 +63,17 @@ exports.logout = async (req, res) => {
     if (!token) {
         return res.status(400).json({ message: 'Token is required' });
     }
-
     try {
         // เพิ่มโทเค็นไปยัง blacklist
-        await blacklistModel.addToken(token, expiresAt); // แยก 'Bearer' ออกจากโทเค็น
+        await blacklistModel.addToken(token, expiresAt);
         return res.status(200).json({ message: 'Logout successful' });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: 'Logout failed' });
     }
 };
+
+//-------------------------------------------------------------------//
 
 // Get all users
 exports.getAllUsers = async (req, res) => {
@@ -88,6 +84,8 @@ exports.getAllUsers = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch users' });
     }
 };
+
+//-------------------------------------------------------------------//
 
 // อัปเดตผู้ใช้
 exports.updateUser = async (req, res) => {
@@ -110,6 +108,8 @@ exports.updateUser = async (req, res) => {
     }
 };
 
+//-------------------------------------------------------------------//
+
 // ลบผู้ใช้
 exports.deleteUser = async (req, res) => {
     const userId = req.params.id;
@@ -129,3 +129,5 @@ exports.deleteUser = async (req, res) => {
         res.status(500).json({ error: 'Failed to delete user' });
     }
 };
+
+//-------------------------------------------------------------------//

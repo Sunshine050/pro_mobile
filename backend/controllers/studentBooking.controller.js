@@ -1,9 +1,7 @@
 const db = require('../config/db.config');
 const Booking = require('../models/booking.model');
 const Room = require('../models/room.model');
-// ลบการนำเข้าฟังก์ชัน cancel จาก '../models/booking.model' ออก
-// const { cancel } = require('../models/booking.model'); // ลบบรรทัดนี้
-
+//-------------------------------------------------------------------//
 const bookRoom = (req, res) => {
   const { room_id, slot, reason } = req.body;
   const { userId } = req.user;
@@ -39,14 +37,14 @@ const bookRoom = (req, res) => {
         // ส่งข้อความสำเร็จกลับ
         res.status(201).json({
           message: 'Booking created successfully',
-          bookingId: result.insertId, // สามารถส่งข้อมูลที่สร้างขึ้นกลับมาได้
+          bookingId: result.insertId,
         });
       });
     });
   });
 };
 
-//------------------------------------------------------------------------------------//
+//-------------------------------------------------------------------//
 
 const getBookings = (req, res) => {
   const { userId } = req.user;
@@ -80,7 +78,7 @@ const getBookings = (req, res) => {
   });
 };
 
-//------------------------------------------------------------------------------------//
+//-------------------------------------------------------------------//
 const getBookmarked = (req, res) => {
   const { userId } = req.user;
   try {
@@ -96,7 +94,7 @@ const getBookmarked = (req, res) => {
   }
 
 }
-//------------------------------------------------------------------------------------//
+//-------------------------------------------------------------------//
 
 const bookmarked = (req, res) => {
   const { room_id } = req.body;
@@ -111,7 +109,7 @@ const bookmarked = (req, res) => {
   });
 }
 
-//------------------------------------------------------------------------------------//
+//-------------------------------------------------------------------//
 
 const unbookmarked = (req, res) => {
   const { room_id } = req.body;
@@ -126,7 +124,7 @@ const unbookmarked = (req, res) => {
   });
 }
 
-//------------------------------------------------------------------------------------//
+//-------------------------------------------------------------------//
 
 const cancel = (req, res) => {
   const { booking_id } = req.params; // ใช้ params แทน body
@@ -141,14 +139,15 @@ const cancel = (req, res) => {
 };
 
 
-//------------------------------------------------------------------------------------//
+//-------------------------------------------------------------------//
 
 // Export functions
 module.exports = {
   bookRoom,
-  cancel,  // export ฟังก์ชัน cancel จากที่ประกาศใหม่
+  cancel,  
   getBookings,
   getBookmarked,
   bookmarked,
   unbookmarked
 };
+//-------------------------------------------------------------------//

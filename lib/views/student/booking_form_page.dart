@@ -112,19 +112,18 @@ class _BookingState extends State<Booking> {
       return;
     }
 
-    // แสดงค่าในคอนโซลเพื่อให้แน่ใจว่าค่าถูกต้อง
+    // check err message
     print('Room ID: ${widget.roomId}');
     print('Slot: $_selectedSlot');
     print('Reason: ${_reasonController.text}');
 
     // ส่งข้อมูลการจองไปยัง API
-    http
-        .post(
+    http.post(
       Uri.parse('http://192.168.206.1:3000/student/book'),
       headers: {
         'Authorization': 'Bearer ${widget.token}',
         'Content-Type':
-            'application/json', // เพิ่ม Content-Type ให้เป็น application/json
+            'application/json',
       },
       body: jsonEncode({
         'room_id': widget.roomId,
@@ -140,7 +139,7 @@ class _BookingState extends State<Booking> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final responseBody = jsonDecode(response.body);
         print(
-            "Booking created with ID: ${responseBody['bookingId']}"); // แสดง ID ของการจองที่ถูกสร้าง
+            "Booking created with ID: ${responseBody['bookingId']}"); 
 
         showDialog(
           context: context,
@@ -149,8 +148,8 @@ class _BookingState extends State<Booking> {
               content: 'Room reserved successfully!',
               onConfirm: () {
                 // ไปที่หน้า Home ทันทีเมื่อสำเร็จ
-                Navigator.pop(context); // ปิด dialog
-                Navigator.pop(context); // กลับไปยังหน้า Home
+                Navigator.pop(context); // close dialog
+                Navigator.pop(context); // switch to Home
               },
               messageType: 'success',
             );
