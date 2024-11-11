@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: db:3306
--- Generation Time: Nov 09, 2024 at 07:27 PM
--- Server version: 11.5.2-MariaDB-ubu2404
--- PHP Version: 8.2.25
+-- Host: 127.0.0.1
+-- Generation Time: Nov 11, 2024 at 07:27 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -52,7 +52,7 @@ CREATE TABLE `blacklist` (
   `id` int(11) NOT NULL,
   `token` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `expires_at` timestamp NOT NULL
+  `expires_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -79,9 +79,10 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `user_id`, `room_id`, `slot`, `status`, `approved_by`, `booking_date`, `reason`, `created_at`, `updated_at`) VALUES
-(6, 6, 1, 'slot_1', 'pending', NULL, '2024-11-05', 'test', '2024-11-05 22:00:09', '2024-11-05 22:00:09'),
-(7, 6, 1, 'slot_1', 'pending', NULL, '2024-11-06', 'test', '2024-11-06 04:47:17', '2024-11-06 04:47:17'),
-(8, 7, 1, 'slot_1', 'pending', NULL, '2024-11-06', 'test', '2024-11-06 04:59:53', '2024-11-06 04:59:53');
+(1, 1, 4, 'slot_1', 'pending', NULL, '2024-11-12', 'aaa', '2024-11-11 18:20:58', '2024-11-11 18:20:58'),
+(2, 1, 4, 'slot_1', 'pending', NULL, '2024-11-12', 'bbb', '2024-11-11 18:22:19', '2024-11-11 18:25:09'),
+(3, 1, 4, 'slot_1', 'pending', NULL, '2024-11-12', 'ccc', '2024-11-11 18:22:46', '2024-11-11 18:25:17'),
+(4, 1, 4, 'slot_1', 'pending', NULL, '2024-11-12', 'ddd', '2024-11-11 18:23:02', '2024-11-11 18:25:22');
 
 -- --------------------------------------------------------
 
@@ -120,13 +121,13 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`id`, `room_name`, `desc`, `image`, `slot_1`, `slot_2`, `slot_3`, `slot_4`, `created_at`, `updated_at`) VALUES
-(1, 'room_001', 'test', '1730831045996-toa-heftiba-FV3GConVSss-unsplash.jpg', 'pending', 'free', 'free', 'free', '2024-11-05 18:24:06', '2024-11-05 18:33:14'),
-(2, 'room_002', 'test', '1730831288742-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-05 18:28:08', '2024-11-05 18:31:53'),
-(3, 'room_003', 'test', '1730831292454-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-05 18:28:12', '2024-11-05 18:31:53'),
-(4, 'room_004', 'test', '1730831295186-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-05 18:28:15', '2024-11-05 18:31:53'),
-(5, 'room_005', 'test', '1730831297780-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-05 18:28:17', '2024-11-05 18:31:53'),
-(6, 'room_006', 'test', '1730831568987-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-05 18:32:48', '2024-11-05 18:32:48'),
-(7, 'room_007', 'test', '1730868296158-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-06 04:44:56', '2024-11-06 04:44:56');
+(1, 'room_001', 'test', '1730572812582-toa-heftiba-FV3GConVSss-unsplash.jpg', 'pending', 'pending', 'pending', 'pending', '2024-11-05 18:24:06', '2024-11-11 18:13:36'),
+(2, 'room_002', 'test', '1730572812582-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-05 18:28:08', '2024-11-09 20:05:01'),
+(3, 'room_003', 'test', '1730572812582-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-05 18:28:12', '2024-11-09 20:05:06'),
+(4, 'room_004', 'test', '1730572812582-toa-heftiba-FV3GConVSss-unsplash.jpg', 'pending', 'free', 'free', 'free', '2024-11-05 18:28:15', '2024-11-09 23:57:31'),
+(5, 'room_005', 'test', '1730572812582-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-05 18:28:17', '2024-11-09 20:05:13'),
+(6, 'room_006', 'test', '1730572812582-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-05 18:32:48', '2024-11-09 20:05:16'),
+(7, 'room_007', 'test', '1730572812582-toa-heftiba-FV3GConVSss-unsplash.jpg', 'free', 'free', 'free', 'free', '2024-11-06 04:44:56', '2024-11-09 20:05:19');
 
 -- --------------------------------------------------------
 
@@ -149,14 +150,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role`, `username`, `password`, `email`, `created_at`, `updated_at`) VALUES
-(6, 'student', 'stu', '$2b$10$2A8Agtt9JaVDc/ZCwEKrDeLiZnFSZyML/GUgyjgLHlQObP2qRQBda', 'student@lamduan.mfu.ac.th', '2024-11-05 20:31:34', '2024-11-05 20:31:34'),
-(7, 'student', 'student', '$2b$10$arkEKG.RaB8f6u0cOOErVe91sWlGAWkg0w6k.rf5MaHnIW8Y7rvAW', 'student12@lamduan.mfu.ac.th', '2024-11-06 04:42:39', '2024-11-06 04:42:39'),
-(8, 'student', 'student_1', '$2b$10$1.m1ffqbGpvfyAX8l1zaz.A18hpjW5iC0OG81aYr2NvkG3DAN6uaK', 'student12@lamduan.mfu.ac.th', '2024-11-08 15:45:31', '2024-11-08 15:45:31'),
-(9, 'approver', 'lec', '$2b$10$P2vKJZpSzZdTiJdodR3MW.z5l8IuXlsvD9x09E3zxUL/OZAe7AFGe', 'student12@lamduan.mfu.ac.th', '2024-11-08 16:13:02', '2024-11-08 16:13:44'),
-(10, 'staff', 'staff', '$2b$10$HItUWq3SiulmOjFYQemVRehiDEV0iRJCvwJWpObX2hLhqfRQqag4K', 'student12@lamduan.mfu.ac.th', '2024-11-08 16:13:09', '2024-11-08 16:13:44'),
-(11, 'student', 'test', '$2b$10$k7vlxc7K9xLI/i9PJCwsi.638vw5HhR/Ay140mLBO8zjzTpKQz/i2', 'test@lamduan.mfu.ac.th', '2024-11-09 12:01:51', '2024-11-09 12:01:51'),
-(12, 'student', 'test1', '$2b$10$g0smjHpcZvTWoDMmfyyeJOF/R/oNHuH07EviwaExoZdr/8XoAW/vu', 'test@lamduan.mfu.ac.th', '2024-11-09 12:04:37', '2024-11-09 12:04:37'),
-(13, 'student', 'test2', '$2b$10$m/JwiFh4J6pB8EEQBNzqJ.6GZkR5GMwNGKJb6IJFSJRtgGvyBe47G', 'test@lamduan.mfu.ac.th', '2024-11-09 12:05:37', '2024-11-09 12:05:37');
+(1, 'student', 'aaa', '$2b$10$NGJQuhJvX8v1ntQiv7u.I.RYU7I5SdSVnVxnklTc.NKLeDTc2sJaC', 'student@lamduan.mfu.ac.th', '2024-11-11 18:19:47', '2024-11-11 18:19:47');
 
 --
 -- Indexes for dumped tables
@@ -212,7 +206,7 @@ ALTER TABLE `blacklist`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `bookmarks`
@@ -230,7 +224,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
