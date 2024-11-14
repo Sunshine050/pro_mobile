@@ -3,7 +3,7 @@ const connection = mysql.createConnection({
   host: 'localhost',
   port: 3306,
   user: 'root',
-  password: '', 
+  password: '',  // ใส่รหัสผ่านที่ตั้งใหม่
   database: 'mobile_project'
 });
 

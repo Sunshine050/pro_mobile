@@ -3,6 +3,7 @@ import 'package:pro_mobile/components/time_slot.dart';
 import 'package:pro_mobile/services/api_service.dart';
 import 'package:pro_mobile/views/staff/manage_rooms_page.dart';
 import 'package:pro_mobile/views/student/booking_form_page.dart';
+import 'package:pro_mobile/widgets/booking.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RoomCard extends StatefulWidget {
@@ -173,7 +174,7 @@ class _RoomCardState extends State<RoomCard> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => Booking(
-                                            roomId: widget.roomId,
+                                            roomId: widget.roomName,
                                             token:
                                                 token, // ส่ง token ที่ดึงมาให้กับ Booking
                                           ),

@@ -3,5 +3,6 @@
     "vscord.app.name": "Visual Studio Code",
     "vscord.app.privacyMode.enable": true,
     "vscord.status.idle.disconnectOnIdle": true,
-    "vscord.behaviour.debug": true
+    "vscord.behaviour.debug": true,
+    "files.exclude": {}
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_mobile/services/api_service.dart';
 import 'package:pro_mobile/views/student/booking_form_page.dart';
+import 'package:pro_mobile/widgets/booking.dart';
 
 class RoomCardSm extends StatefulWidget {
   final String roomName, img, slot_1, slot_2, slot_3, slot_4;
@@ -118,7 +119,7 @@ class _RoomCardSmState extends State<RoomCardSm> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Booking(
-                                        roomId: widget.roomId,
+                                        roomId: widget.roomName,
                                         token: '',
                                       )),
                             )

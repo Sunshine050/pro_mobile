@@ -9,7 +9,7 @@ import 'package:pro_mobile/widgets/NavigationBar_student.dart';
 class Booking extends StatefulWidget {
   final String roomId;
 
-  const Booking({super.key, required this.roomId});
+  const Booking({super.key, required this.roomId, required String token});
 
   @override
   State<Booking> createState() => _BookingState();

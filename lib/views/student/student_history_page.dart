@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class History extends StatefulWidget {
   const History({super.key});
@@ -8,49 +10,44 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  // int _currentIndex = 2; // Default to History tab
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> filteredReservations = [];
   bool _isSearching = false;
 
-  // Sample reservations
-  final List<Map<String, dynamic>> reservations = [
-    {
-      'room_title': 'Room 1',
-      'time': '08:00 - 10:00',
-      'date': '01/01/2077',
-      'status': 'Approved',
-      'approver': 'John Doe',
-      'reason': 'Project discussion meeting',
-    },
-    {
-      'room_title': 'Room 2',
-      'time': '08:00 - 10:00',
-      'date': '01/01/2077',
-      'status': 'Rejected',
-      'approver': 'Jane Doe',
-      'reason': 'Team building session',
-    },
-    {
-      'room_title': 'Room 3',
-      'time': '08:00 - 10:00',
-      'date': '01/01/2077',
-      'status': 'Canceled',
-      'approver': null,
-      'reason': 'Personal reasons',
-    },
-  ];
-
   @override
   void initState() {
     super.initState();
-    filteredReservations =
-        reservations; // Initialize filtered list with reservations
+    fetchReservations();
+  }
+
+  Future<void> fetchReservations() async {
+    try {
+      final response = await http.get(Uri.parse('http://192.168.206.1/student/history'));
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        setState(() {
+          filteredReservations = data.map((item) {
+            return {
+              'room_title': item['room_name'],
+              'time': item['time'],
+              'date': item['booking_date'],
+              'status': item['status'],
+              'approver': item['approved_by'] != null ? item['approved_by'] : 'Not assigned',
+              'reason': item['reason'] ?? 'No reason provided',
+            };
+          }).toList();
+        });
+      } else {
+        throw Exception('Failed to load reservations');
+      }
+    } catch (e) {
+      print('Error fetching reservations: $e');
+    }
   }
 
   void _filterReservations(String query) {
     setState(() {
-      filteredReservations = reservations.where((reservation) {
+      filteredReservations = filteredReservations.where((reservation) {
         return reservation['room_title']
                 .toLowerCase()
                 .contains(query.toLowerCase()) ||
@@ -64,7 +61,7 @@ class _HistoryState extends State<History> {
       _isSearching = !_isSearching;
       if (!_isSearching) {
         _searchController.clear();
-        filteredReservations = reservations; // Reset the list
+        fetchReservations(); // Reset the list when search is closed
       }
     });
   }
@@ -197,7 +194,7 @@ class _HistoryState extends State<History> {
                                             reservation['status'] == 'Approved'
                                                 ? const Icon(Icons.check_circle,
                                                     color: Colors.green)
-                                                : reservation['status'] ==
+                                                : reservation['status'] == 
                                                         'Rejected'
                                                     ? const Icon(Icons.cancel,
                                                         color: Colors.red)
@@ -209,10 +206,10 @@ class _HistoryState extends State<History> {
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400,
-                                                color: reservation['status'] ==
+                                                color: reservation['status'] == 
                                                         'Approved'
                                                     ? Colors.green
-                                                    : reservation['status'] ==
+                                                    : reservation['status'] == 
                                                             'Rejected'
                                                         ? Colors.red
                                                         : Colors.grey,
@@ -221,20 +218,13 @@ class _HistoryState extends State<History> {
                                           ],
                                         ),
                                         const SizedBox(height: 2),
-                                        // Show the approver only if the status is not 'Canceled'
                                         if (reservation['status'] != 'Canceled')
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                'By: [${reservation['approver'] ?? 'Not assigned'}]',
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w300,
-                                                ),
-                                              ),
-                                            ],
+                                          Text(
+                                            'By: ${reservation['approver']}',
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                            ),
                                           ),
                                       ],
                                     ),
@@ -242,7 +232,6 @@ class _HistoryState extends State<History> {
                                 ],
                               ),
                               const SizedBox(height: 5),
-                              // Add Reason section
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -266,7 +255,7 @@ class _HistoryState extends State<History> {
                                       borderRadius: BorderRadius.circular(4.0),
                                     ),
                                     child: Text(
-                                      '${reservation['reason'] ?? 'No reason provided'}',
+                                      reservation['reason'],
                                       style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w300,
