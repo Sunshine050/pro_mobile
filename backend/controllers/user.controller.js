@@ -25,6 +25,7 @@ const history = async (req, res) => {
         res.status(500).send('Internal server error');
     }
 }
+
 //-------------------------------------------------------------------//
 // data for dashboard
 const summary = async (req, res) => {
